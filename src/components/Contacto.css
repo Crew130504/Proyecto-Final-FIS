@@ -1,0 +1,26 @@
+/* src/components/Contacto.css */
+.contacto {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .contacto h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #007BFF;
+  }
+  
+  .contacto p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .contacto a {
+    color: #007BFF;
+    text-decoration: none;
+  }
+  
+  .contacto a:hover {
+    text-decoration: underline;
+  }
+  

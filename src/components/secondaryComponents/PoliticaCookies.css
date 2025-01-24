@@ -1,0 +1,93 @@
+/* Contenedor principal */
+.politica-cookies {
+    padding: 40px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    max-width: 900px;
+    margin: 40px auto;
+    color: #333;
+  }
+  
+  /* Título principal */
+  .politica-cookies h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: #FF5722;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  /* Párrafos introductorios */
+  .politica-cookies p {
+    font-size: 1.1em;
+    color: #555;
+    text-align: justify;
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+  
+  /* Secciones */
+  .politica-seccion {
+    background-color: #ffffff;
+    border-left: 5px solid #FF5722;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Títulos de las secciones */
+  .politica-seccion h2 {
+    font-size: 1.8em;
+    color: #FF5722;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  /* Párrafos dentro de las secciones */
+  .politica-seccion p {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.6;
+    text-align: justify;
+  }
+  
+  /* Listas dentro de las secciones */
+  .politica-seccion ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .politica-seccion li {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.7;
+  }
+  
+  /* Añadimos un hover para hacer más interactivo */
+  .politica-seccion:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+  }
+  
+  /* Estilos responsivos para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .politica-cookies {
+      padding: 20px;
+      margin: 20px;
+    }
+  
+    .politica-cookies h1 {
+      font-size: 2em;
+    }
+  
+    .politica-seccion h2 {
+      font-size: 1.5em;
+    }
+  }
+  

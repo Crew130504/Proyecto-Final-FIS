@@ -1,0 +1,131 @@
+/* src\components\Header.css*/
+/* Estilo general del encabezado */
+.Header {
+  background-color: #31323375; /* Color de fondo */
+  color: white; /* Color del texto */
+  padding: 15px; /* Espaciado */
+  display: flex;
+  justify-content: space-between; /* Espaciado entre logo y navegación */
+  align-items: center; /* Alinear verticalmente */
+  position: relative; /* Para posicionar el avatar */
+}
+
+/* Logo del encabezado */
+.logo-img {
+  width: 90px; /* Ajusta el tamaño según tus necesidades */
+  height: auto;
+}
+
+/* Menú de navegación */
+.Header-nav {
+  display: flex;
+  align-items: center; /* Alinea los items en el centro */
+}
+
+.Header-nav ul {
+  list-style: none; /* Sin viñetas */
+  display: flex; /* Horizontal */
+  margin: 0; /* Sin margen */
+  padding: 0; /* Sin padding */
+}
+
+/* Estilo de los elementos de la lista en el menú */
+.Header-nav li {
+  margin: 0 15px; /* Espaciado entre elementos de la lista */
+}
+
+/* Enlaces de la navegación */
+.Header-nav a {
+  color: #222325; /* Color de los enlaces */
+  text-decoration: none; /* Sin subrayado */
+}
+
+/* Efecto al pasar el mouse sobre los enlaces */
+.Header-nav a:hover {
+  text-decoration: underline; /* Subrayado en hover */
+}
+
+/* Avatar en la parte superior derecha */
+.avatar-container {
+  position: relative;
+  cursor: pointer;
+  margin-left: 20px; /* Añadimos espacio para separar el avatar del menú */
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff; /* Opcional, para darle un borde blanco */
+}
+
+/* Estilo del menú desplegable */
+.dropdown-menu {
+  opacity: 0; /* Inicialmente invisible */
+  position: absolute;
+  top: 50px; /* Ajusta la posición */
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 10;
+  visibility: hidden; /* Inicialmente oculto */
+  pointer-events: none; /* Para evitar interacciones cuando el menú está oculto */
+  transition: opacity 2s ease, visibility 0s 0s; /* Transición de opacidad de 2s */
+}
+
+/* Menú de elementos */
+.dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+}
+
+.dropdown-menu li a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+.dropdown-menu li button {
+  background-color: transparent;
+  border: none;
+  color: #333;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover,
+.dropdown-menu li button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Mostrar el menú cuando el avatar está en hover */
+.avatar-container:hover .dropdown-menu {
+  opacity: 1; /* Hacer visible el menú */
+  visibility: visible; /* Hacerlo visible */
+  pointer-events: all; /* Habilitar interacción */
+  transition: opacity 2s ease, visibility 0s 0s; /* Transición inmediata con 2s */
+}
+
+/* Asegura que el menú desaparezca con retraso después de 2 segundos */
+.avatar-container:not(:hover) .dropdown-menu {
+  opacity: 0;
+  visibility: hidden; /* Se oculta el menú con visibilidad */
+  pointer-events: all; /* Mantener la interacción mientras se desvanece */
+  transition: opacity 2s ease, visibility 0s 2s; /* Retardo de 2 segundos antes de desaparecer */
+}
+
+/* Ampliar el área activa del menú */
+.avatar-container:hover .dropdown-menu,
+.dropdown-menu:hover {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 2s ease, visibility 0s 0s; /* Transición suave de 2s */
+}

@@ -1,0 +1,109 @@
+/* Estilos generales */
+.nuestras-sucursales {
+    padding: 40px 50px;
+    background-color: #f4f4f4;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Georgia', serif;
+    max-width: 1000px;
+    margin: 40px auto;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Título principal */
+  .nuestras-sucursales h1 {
+    font-size: 3em;
+    margin-bottom: 30px;
+    color: #007BFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  /* Párrafo introductorio */
+  .nuestras-sucursales p {
+    font-size: 1.15em;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+  
+  /* Estilo para cada sucursal */
+  .sucursal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Efecto de hover en las sucursales */
+  .sucursal:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Imagen de la sucursal */
+  .sucursal-imagen {
+    max-width: 300px;
+    border-radius: 10px;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+  
+  /* Información de la sucursal */
+  .sucursal-info {
+    text-align: left;
+    max-width: 600px;
+  }
+  
+  /* Títulos de cada sucursal */
+  .sucursal-info h2 {
+    font-size: 2em;
+    color: #007BFF;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Párrafos dentro de cada sucursal */
+  .sucursal-info p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  
+  /* Responsividad para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .nuestras-sucursales {
+      padding: 20px;
+      margin: 20px;
+    }
+  
+    .sucursal {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .sucursal-imagen {
+      max-width: 80%;
+      margin-bottom: 20px;
+    }
+  
+    .sucursal-info {
+      text-align: center;
+    }
+  
+    .sucursal-info h2 {
+      font-size: 1.6em;
+    }
+  }
+  

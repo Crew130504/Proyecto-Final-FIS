@@ -1,0 +1,188 @@
+/*src\components\EstampaDetalle.css */
+.detalle-contenedor {
+  display: flex;
+  gap: 20px;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.detalle-imagen {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detalle-imagen img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.detalle-info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detalle-precio {
+  font-size: 26px;
+  color: #ff6f61;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.detalle-botones {
+  display: flex;
+  gap: 15px;
+}
+
+.boton-comprar,
+.boton-carrito {
+  padding: 12px 25px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.boton-comprar {
+  background-color: #4CAF50;
+}
+
+.boton-comprar:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.boton-carrito {
+  background-color: #007bff;
+}
+
+.boton-carrito:hover {
+  background-color: #0069d9;
+  transform: scale(1.05);
+}
+
+.detalle-descripcion {
+  background-color: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.detalle-descripcion h4 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #333;
+}
+.boton-devolver {
+  padding: 10px;
+  border: none;
+  background-color: #f0f0f0; /* Gris claro */
+  color: #333; /* Gris oscuro */
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 40px;
+  height: 40px;
+}
+
+.boton-devolver:hover {
+  background-color: #dcdcdc; /* Gris más oscuro en hover */
+  transform: scale(1.1);
+}
+
+
+.flecha {
+  font-size: 18px; /* Tamaño de la flecha */
+  line-height: 0;
+}
+.camiseta-previsualizacion {
+  position: relative;
+  width: 300px;
+  height: 400px; /* Ajusta el tamaño de la camiseta */
+}
+
+.camiseta-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.estampa-previsualizacion {
+  position: absolute;
+  width: 100px; /* Tamaño de la estampa */
+  height: 100px;
+  object-fit: contain;
+  transform: translate(-50%, -50%); /* Centrado exacto en la posición */
+}
+@media (max-width: 768px) {
+  .detalle-contenedor {
+    flex-direction: column;
+    align-items: center;
+  }
+  .detalle-info {
+    text-align: center;
+  }
+}
+.precio-total {
+  font-size: 1.2em;
+  color: #333;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.estampa-grande {
+  width: 100px;
+  height: 100px;
+}
+
+.estampa-mediano {
+  width: 70px;
+  height: 70px;
+}
+
+.estampa-pequeno {
+  width: 40px;
+  height: 40px;
+}
+/* Estilo para el campo de descripción de diseño */
+textarea {
+  width: 100%; /* Ocupa el 100% del contenedor */
+  height: 100px; /* Ajusta la altura para mayor visibilidad */
+  padding: 10px; /* Espaciado interno */
+  font-size: 16px; /* Tamaño de fuente */
+  border: 1px solid #ddd; /* Borde ligero */
+  border-radius: 5px; /* Bordes redondeados */
+  resize: vertical; /* Permite al usuario ajustar la altura */
+  background-color: #fafafa; /* Fondo suave */
+  color: #333; /* Texto oscuro para mayor legibilidad */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+  transition: border-color 0.3s ease;
+}
+
+textarea:focus {
+  border-color: #007bff; /* Cambia el color del borde al hacer foco */
+  outline: none; /* Remueve el borde azul por defecto */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra más intensa al hacer foco */
+}
+.caracteres-restantes {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+  text-align: right;
+}

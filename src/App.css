@@ -1,0 +1,70 @@
+body {
+  background-image: url('./Imagenes/Fondo.jpeg'); /* Asegúrate de que esta sea la ruta correcta */
+  background-size: cover; /* La imagen cubrirá toda la pantalla */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./Imagenes/Fondo.jpeg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2; /* Ajusta este valor para el efecto de transparencia */
+  z-index: -1; /* Esto asegura que el fondo esté detrás de todos los elementos */
+}
+/* App Styles */
+.App {
+  text-align: center;
+  font-family: 'Roboto', sans-serif; /* Ejemplo de fuente */
+  display: flex;
+  flex-direction: column;
+  min-height: 130vh; /* Altura mínima para llenar la pantalla */
+}
+
+.App-header {
+  background-color: #565759; /* Fondo oscuro */
+  flex: 1; /* Esto permite que el encabezado se expanda y empuje el pie de página */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 20px; /* Espaciado interno */
+}
+
+.App-link {
+  color: #61dafb; /* Color para los enlaces */
+  text-decoration: none; /* Sin subrayado */
+}
+
+.App-link:hover {
+  text-decoration: underline; /* Subrayado en hover */
+}
+
+/* Footer Styles */
+footer {
+  background-color: #565759; /* Mismo fondo que el encabezado */
+  color: white; /* Color de texto */
+  padding: 10px 0; /* Espaciado interno del pie de página */
+  margin-top: auto; /* Asegura que el pie de página esté al final */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .App-header {
+    font-size: calc(8px + 2vmin); /* Tamaño de fuente más pequeño en móviles */
+  }
+}
+
+@media (max-width: 480px) {
+  .App-header {
+    padding: 10px; /* Menos padding en móviles pequeños */
+  }
+}
+

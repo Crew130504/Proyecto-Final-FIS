@@ -1,0 +1,67 @@
+/* src/components/Inicio.css */
+.inicio {
+    padding: 20px;
+  }
+  
+  .inicio h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 40px;
+    font-size: 2rem;
+  }
+  
+  .card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .card img {
+    width: 40%;
+    border-radius: 10px;
+    margin-right: 20px;
+    transition: transform 0.3s;
+  }
+  
+  .card .content {
+    flex: 1;
+  }
+  
+  .card h2 {
+    color: #007BFF;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  /* Animaciones para cuando el usuario pasa el cursor */
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .card:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* Responsivo para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .card {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .card img {
+      width: 100%;
+      margin: 0 0 15px 0;
+    }
+  }
+  

@@ -1,0 +1,33 @@
+/* src/components/PerfilUsuarioCliente.css */
+.perfil-cliente {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.info-cliente p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.compras, .carrito {
+    margin-top: 20px;
+}
+
+.compras ul, .carrito ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.compras li, .carrito li {
+    font-size: 14px;
+    margin: 5px 0;
+}

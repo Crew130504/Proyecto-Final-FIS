@@ -1,0 +1,60 @@
+.soporte-tecnico {
+    text-align: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  .soporte-tecnico h1 {
+    font-size: 2.2rem;
+    color: #333;
+  }
+  
+  .soporte-tecnico p {
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .soporte-seccion {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 80%;
+    background-color: #ffffff;
+  }
+  
+  .soporte-imagen {
+    width: 100px;
+    height: 100px;
+    border-radius: 10%;
+  }
+  
+  .soporte-seccion h2 {
+    font-size: 1.5rem;
+    color: #444;
+  }
+  
+  .soporte-seccion p {
+    font-size: 1rem;
+    color: #666;
+    max-width: 400px;
+  }
+  
+  .soporte-contacto {
+    margin-top: 30px;
+  }
+  
+  .soporte-contacto h3 {
+    font-size: 1.6rem;
+    color: #333;
+  }
+  
+  .soporte-contacto p {
+    font-size: 1.1rem;
+    color: #777;
+  }
+  

@@ -1,0 +1,100 @@
+/* Estilos generales */
+.pqrs {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+  
+  .pqrs h1 {
+    text-align: center;
+    font-size: 2.5em;
+    color: #4CAF50;
+    margin-bottom: 20px;
+  }
+  
+  .pqrs p {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+    color: #555;
+  }
+  
+  /* Estilo del formulario */
+  .pqrs-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+  }
+  
+  .form-group textarea {
+    min-height: 150px;
+  }
+  
+  .btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: #45a049;
+  }
+  
+  @media (max-width: 768px) {
+    .pqrs {
+      padding: 20px;
+    }
+  
+    .pqrs h1 {
+      font-size: 2em;
+    }
+  
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      font-size: 0.9em;
+    }
+  
+    .btn-submit {
+      font-size: 1em;
+    }
+  }
+  

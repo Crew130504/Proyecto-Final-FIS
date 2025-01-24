@@ -1,0 +1,60 @@
+/* src\components\Compras.css */
+
+.compras-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .compras-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .compras-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .compra-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 250px;
+    text-align: left;
+    transition: transform 0.2s;
+  }
+  
+  .compra-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .compra-item h3 {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .compra-item p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .compra-item p strong {
+    color: #333;
+  }
+  
+  .compra-item p:last-child {
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+  }
+  

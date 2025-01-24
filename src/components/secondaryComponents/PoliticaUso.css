@@ -1,0 +1,87 @@
+/* Estilos generales para la política de uso */
+.politica-uso {
+    padding: 40px 50px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Georgia', serif;
+    max-width: 900px;
+    margin: 40px auto;
+    color: #333;
+    text-align: justify;
+  }
+  
+  /* Título principal */
+  .politica-uso h1 {
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 30px;
+    color: #007BFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  /* Párrafos introductorios */
+  .politica-uso p {
+    font-size: 1.15em;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.7;
+  }
+  
+  /* Secciones de la política */
+  .politica-seccion {
+    background-color: #ffffff;
+    border-left: 8px solid #007BFF;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Títulos de cada sección */
+  .politica-seccion h2 {
+    font-size: 1.8em;
+    color: #007BFF;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Párrafos dentro de las secciones */
+  .politica-seccion p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.6;
+    text-align: justify;
+  }
+  
+  /* Añadimos efecto de hover en las secciones */
+  .politica-seccion:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+  }
+  
+  /* Estilo responsivo para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .politica-uso {
+      padding: 20px;
+      margin: 20px;
+    }
+  
+    .politica-uso h1 {
+      font-size: 2.2em;
+    }
+  
+    .politica-seccion h2 {
+      font-size: 1.5em;
+    }
+  
+    .politica-seccion p {
+      font-size: 1em;
+    }
+  }
+  

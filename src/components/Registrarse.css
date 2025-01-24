@@ -1,0 +1,106 @@
+/* src/components/Registrarse.css */
+.registro-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.registro-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.registro-container form div {
+  margin-bottom: 15px;
+}
+
+.registro-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.registro-container input {
+  width: 100%;
+  padding: 12px;  /* Aumenta un poco el padding */
+  border-radius: 4px;
+  border: 1px solid black;
+}
+
+
+.registro-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #323234;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registro-container button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Añade un pequeño efecto de sombra */
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.success {
+  color: green;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.limit-warning {
+  color: orange;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 5px;
+}
+.password-container {
+  display: grid;
+  grid-template-columns: 1fr auto; /* La primera columna ocupa el espacio disponible y la segunda es para el ícono */
+  align-items: center;
+  width: 100%;
+}
+
+.password-container input {
+  padding: 12px; /* Ajusta el padding */
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 4px;
+  width: 100%; /* Asegura que el input ocupe el 100% del espacio disponible */
+}
+
+.eye-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eye-icon:hover {
+  color: #0056b3;
+}
+
+/* Para navegadores basados en WebKit (Chrome, Edge, Safari) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Elimina las flechas */
+  margin: 0; /* Opcional: Asegura que no haya espacio sobrante */
+}
+
+

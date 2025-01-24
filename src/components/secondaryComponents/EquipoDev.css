@@ -1,0 +1,113 @@
+/* Estilos generales */
+.equipo-dev {
+    padding: 40px;
+    background-color: #f5f5f5;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título principal */
+  .equipo-dev h1 {
+    font-size: 3em;
+    color: #007BFF;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Párrafo introductorio */
+  .equipo-dev p {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  
+  /* Sección de miembros */
+  .miembros {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  
+  /* Estilo de cada miembro */
+  .miembro {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .miembro:hover {
+    transform: translateY(-10px);
+  }
+  
+  /* Imagen del miembro */
+  .miembro-imagen {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+  
+  /* Nombre y descripción del miembro */
+  .miembro h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .miembro p {
+    font-size: 1em;
+    color: #777;
+    line-height: 1.5;
+  }
+  
+  /* Estilo para el mensaje al final */
+  .mensaje h2 {
+    font-size: 1em;
+    color: #000000;
+    font-weight: bold;
+    margin-top: 50px;
+  }
+  
+  /* Estilo responsivo para dispositivos móviles */
+  @media (max-width: 768px) {
+    .equipo-dev {
+      padding: 20px;
+    }
+  
+    .miembros {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .miembro {
+      width: 80%;
+      margin-bottom: 20px;
+    }
+  
+    .equipo-dev h1 {
+      font-size: 2.5em;
+    }
+  
+    .equipo-dev p {
+      font-size: 1.1em;
+    }
+  
+    .mensaje h2 {
+      font-size: 1.5em;
+    }
+  }
+  

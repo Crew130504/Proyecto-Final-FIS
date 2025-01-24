@@ -1,0 +1,102 @@
+/* Estilos generales */
+.sobre-nosotros {
+    padding: 40px 60px;
+    background-color: #f4f4f4;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    max-width: 1000px;
+    margin: 40px auto;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Título principal */
+  .sobre-nosotros h1 {
+    font-size: 3em;
+    margin-bottom: 30px;
+    color: #007BFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  /* Párrafos generales */
+  .sobre-nosotros p {
+    font-size: 1.15em;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 30px;
+  }
+  
+  /* Estilo para cada sección */
+  .sobre-nosotros > div {
+    margin-bottom: 40px;
+  }
+  
+  /* Títulos de sección */
+  .sobre-nosotros h2 {
+    font-size: 2.5em;
+    color: #007BFF;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Sección de imagen del equipo */
+  .equipo-imagen {
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Imagen del logo de la tienda */
+  .logo-imagen {
+    max-width: 250px;
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Sección de contacto */
+  .contacto {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Sección de historia, misión y visión */
+  .historia, .mision, .vision {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Estilo responsivo para dispositivos móviles */
+  @media (max-width: 768px) {
+    .sobre-nosotros {
+      padding: 20px;
+      margin: 20px;
+    }
+  
+    .equipo-imagen {
+      width: 100%;
+    }
+  
+    .logo-imagen {
+      width: 70%;
+    }
+  
+    .sobre-nosotros h1 {
+      font-size: 2.5em;
+    }
+  
+    .sobre-nosotros h2 {
+      font-size: 2em;
+    }
+  }
+  

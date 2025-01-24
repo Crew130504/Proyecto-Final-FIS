@@ -1,0 +1,108 @@
+/* Estilo general de la página */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Fondo claro */
+    color: #495057; /* Color de texto principal */
+    padding: 20px;
+    margin-bottom: 50px; /* Aumentar el espacio entre el contenido y el pie de página */
+}
+
+/* Encapsulamos el formulario y sus elementos en un contenedor específico */
+.form-container {
+    background-color: #ffffff; /* Fondo blanco para el formulario */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    max-width: 600px;
+    margin: 0 auto;
+    margin-bottom: 40px; /* Mayor espacio en la parte inferior del formulario */
+}
+
+/* Títulos dentro del formulario */
+.form-container h1 {
+    font-size: 2rem;
+    color: #343a40; /* Color oscuro para el título */
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #6c757d; /* Borde sutil */
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* Estilo de las etiquetas dentro del formulario */
+.form-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #495057; /* Color de texto para las etiquetas */
+}
+
+/* Estilo de los campos de entrada dentro del formulario */
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container textarea,
+.form-container input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da; /* Color sutil para los bordes */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 20px;
+    background-color: #e9ecef; /* Fondo ligeramente gris para los campos */
+    transition: border-color 0.3s ease;
+}
+
+/* Estilo de los campos de entrada cuando están en foco */
+.form-container input[type="text"]:focus,
+.form-container input[type="number"]:focus,
+.form-container textarea:focus,
+.form-container input[type="file"]:focus {
+    border-color: #6c757d; /* Resalta el borde al tener el foco */
+    background-color: #ffffff; /* Fondo blanco cuando el campo está en foco */
+    outline: none;
+}
+
+.form-container textarea {
+    min-height: 100px;
+}
+
+/* Estilo del botón dentro del formulario */
+.form-container button {
+    background-color: #6c757d; /* Color de fondo gris oscuro */
+    color: white;
+    font-size: 1.1rem;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+}
+
+/* Estilo del botón al pasar el mouse */
+.form-container button:hover {
+    background-color: #495057; /* Color más oscuro cuando se pasa el mouse */
+}
+
+/* Estilo del botón al hacer clic */
+.form-container button:active {
+    transform: scale(0.98); /* Efecto de botón al hacer clic */
+}
+
+/* Estilo de los mensajes de error dentro del formulario */
+.form-container .error-message {
+    font-size: 0.95rem;
+    color: #d32f2f; /* Rojo para los errores */
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Asegurarse de que el formulario sea responsivo */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
+        width: 90%;
+    }
+}

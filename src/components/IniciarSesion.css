@@ -1,0 +1,258 @@
+/*src\components\IniciarSesion.css*/
+@import url('https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: "Montserrat", sans-serif;
+}
+
+.container {
+    width: 800px;
+    height: 500px;
+    display: flex;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-image: url('../Imagenes/Fondo.jpeg');
+    margin: auto;
+}
+
+
+.container-form{
+    width: 100%;
+    overflow: hidden;
+}
+.container-form form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease; /**Animación de transición**/
+}
+.container-form h2{
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+
+.container-form span{
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.container-input{
+    width: 300px;
+    height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:8px;
+    padding: 0 15px; /**Separación de los bordes, 15px izq y der**/
+    background-color: #EEEEEE;
+    border: solid black 1q;
+}
+.container-input input{
+    border:none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+}
+
+.container-form a{
+    color: black;
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.button{
+    width: 170px;
+    height: 45px;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #323234;
+    color: white;
+}
+
+/*Animacion del formulario*/
+
+.sign-up{
+    transform: translateX(-100%); /**Esconder registrarse en donde está iniciar sesión**/
+}
+.container.toggle .sign-in{
+    transform: translateX(100%); /**Esconder iniciar sesión en donde está registrarse**/
+
+}
+.container.toggle .sign-up{
+    transform: translateX(0); /**Mostrar registrarse**/
+}
+
+.container-welcome{
+    position: absolute; /**Para moverlo en todo el contenedor**/
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transform: translateX(100%);
+    background-color: #363a39;
+    transition: transofrm 0.5s ease-in-out, border-radius 0.5s ease;
+    overflow: hidden; /**Para que no se vea el contenido que se sale del contenedor**/
+    border-radius: 50% 0 0 50%; /**Para que sea un circulo**/
+}
+
+.container.toggle .container-welcome{
+    transform: translateX(0);
+    border-radius: 0 50% 50% 0; /**Para que sea un circulo**/
+    background-color: #262827;
+
+}
+
+.container-welcome .welcome{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 50px;
+    color: white;
+    transition: transform 0.5s ease-in-out;
+}
+
+.welcome-sign-in{
+    transform:translateX(100%);
+}
+
+.container-welcome h3{
+    font-size: 40px;
+    color: white;
+}
+
+.container-welcome p{
+    font-size: 14px;
+    text-align: center;
+}
+
+.container-welcome .button{
+    border: 2px solid white;
+    background-color: transparent;
+
+}
+
+.container.toggle .welcome-sign-in{ /**Toggle cuando se da click**/
+    transform: translateX(0);
+}
+
+.container.toggle .welcome-sign-up{
+    transform: translateX(-100%);
+}
+/* Estilo para el label de Rol */
+.container-form label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+}
+
+/* Estilo para el select de Rol */
+.container-input select {
+    width: 300px;
+    height: 40px;
+    padding: 0 10px;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #EEEEEE;
+    outline: none;
+    appearance: none; /* Para ocultar la flecha del select en algunos navegadores */
+}
+
+/* Opcional: estiliza la flecha de selección */
+.container-input select::-ms-expand {
+    display: none; /* Para Internet Explorer y Edge */
+}
+
+/* Estilo adicional para hover */
+.container-input select:hover {
+    border-color: #888;
+}
+
+/* Alinear y centrar el campo de Rol en el contenedor */
+.container-input {
+    justify-content: center;
+    flex-direction: column;
+}
+/* Estilo para el contenedor del campo de Rol */
+.container-input select {
+    width: 300px;
+    height: 40px;
+    padding: 0 15px;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23777" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); /* Flecha personalizada */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+/* Cambiar el borde y el fondo cuando se hace hover */
+.container-input select:hover {
+    border-color: #888;
+    background-color: #eaeaea;
+}
+
+/* Cambiar el borde y el fondo cuando el campo está enfocado */
+.container-input select:focus {
+    border-color: #555;
+    background-color: #ffffff;
+}
+
+/* Opcional: Estilo para el texto del label del rol */
+.container-form label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+}
+.limit-message {
+    font-size: 12px; /* Tamaño de fuente más pequeño */
+    color: #FF0000; /* Color rojo para llamar la atención */
+    margin-top: 5px; /* Espacio entre el mensaje y el campo de entrada */
+    font-family: Arial, sans-serif; /* Fuente más legible */
+  }
+/* Asegúrate de agregar clases o identifica los elementos correctamente */
+.container-form .mensaje-registro {
+    color: white;  /* Cambia el color del texto a blanco */
+    font-family: "Montserrat", sans-serif;
+}
+
+.container-form .mensaje-login {
+    color: white;
+    font-family: "Montserrat", sans-serif;
+}
