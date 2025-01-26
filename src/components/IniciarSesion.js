@@ -33,40 +33,23 @@ const IniciarSesion = () => {
   const [nicknameLimitReached, setNicknameLimitReached] = useState(false);
   const [passwordLimitReached, setPasswordLimitReached] = useState(false);
   const [cedulaLimitReached, setCedulaLimitReached] = useState(false);
-  // async function getUsuarioPorCedula(cedula) {
-  //   try {
-  //     let url = `${Apiurl}/usuarios/login`;
-  //     const response = await axios.get(url);
-      
-  //     // Verifica si hay un error en la respuesta
-  //     if (response.data.error) {
-  //       console.error("Error al obtener el usuario:", response.data);
-  //       return null;
-  //     }
   
-  //     // Obtén el objeto del usuario desde la respuesta
-  //     const usuario = response.data.body[0];
-  //     console.log("Usuario encontrado:", usuario);
-  //     return usuario;
-  //   } catch (error) {
-  //     console.error("Error en la solicitud:", error);
-  //     return null;
-  //   }
-  // }
 
-  const handleSignInSubmit = (e) => {
+  const handleSignInSubmit = async (e) => {
     e.preventDefault();
-    setError('');  // Limpia el mensaje de error antes de la verificación
-    // const miUsuario =getUsuarioPorCedula(cedula);
-    // if(miUsuario.cedula === cedula && miUsuario.password === password){
-    //   login(miUsuario.rol);
-    // }else 
-    if (cedula === '1' && password === '123') {
-      login(rol);
-    } else {
-      setError('Cedula o contraseña incorrectos');
+    setError(""); // Limpia el mensaje de error
+    try {
+      await login(nickname, password, rol);
+    } catch (error) {
+      // Maneja el error y define el mensaje al usuario
+      if (error.message.includes("HTTP Error: 500")) {
+        setError("Usuario NO encontrado, Registrese");
+      } else {
+        setError(error.message || "Ocurrió un error inesperado. Inténtelo de nuevo.");
+      }
     }
   };
+  
   
 
   const handleRegisterSubmit = (e) => {
@@ -131,18 +114,18 @@ const IniciarSesion = () => {
       <div className="container-form">
         <form className="log-in" data-testid="login-form" onSubmit={handleSignInSubmit}>
           <h2>Iniciar Sesión</h2>
-          <span><strong>Use su cedula y contraseña</strong></span>
+          <span><strong>Use su Usuario y contraseña</strong></span>
           <div className="container-input">
             <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
             <input
               type="text"
-              placeholder="Cedula (Iniciar sesión)"
-              value={cedula}
-              onChange={handleInputChange(setCedula, setCedulaLimitReached, 20)}
+              placeholder="Usuario (Iniciar sesión)"
+              value={nickname}
+              onChange={handleInputChange(setNickname, setNicknameLimitReached, 20)}
               maxLength={20}
               required
-              id="cedula-log-in"
-              aria-label="Cedula"
+              id="nickname-log-in"
+              aria-label="Nickname"
             />
             {cedulaLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
