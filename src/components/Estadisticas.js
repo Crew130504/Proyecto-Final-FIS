@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -13,20 +13,35 @@ import {
 } from 'chart.js';
 import './Estadisticas.css';
 
-//Muestra las estadísticas de la página para el administrador con gráficos y ayudas visuales.
-//Esta parte no la hice yo pero bueno, primero importo una dependencia para las gráficas y luego le puso datos.
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Tooltip, Legend);
 
 const Estadisticas = () => {
-  // Datos iniciales
+  const [estampasMasVendidas, setEstampasMasVendidas] = useState([]);
+  const [recaudoTotal, setRecaudoTotal] = useState(0);
+
+  // Efecto para fetchear datos
+  useEffect(() => {
+    // Obtener estampas más vendidas
+    fetch('/admin/stats/ev/5') // Cambia el límite según sea necesario
+      .then((response) => response.json())
+      .then((data) => {
+        setEstampasMasVendidas(data.map((item) => ({ nombre: item.codigo, cantidad: item.ventas })));
+      })
+      .catch((error) => console.error('Error al obtener estampas más vendidas:', error));
+
+    // Obtener recaudo total
+    fetch('/admin/stats/tr')
+      .then((response) => response.json())
+      .then((data) => setRecaudoTotal(data.total))
+      .catch((error) => console.error('Error al obtener recaudo total:', error));
+  }, []);
+
+  // Datos quemados
   const ventasTotales = 500;
   const clientes = 200;
   const artistas = 10;
-
-  const ventasPorMes = [120, 150, 230]; // Septiembre, Octubre, Noviembre
-  const clientesPorMes = [40, 65, 95]; // Septiembre, Octubre, Noviembre
-
+  const ventasPorMes = [120, 150, 230];
+  const clientesPorMes = [40, 65, 95];
   const coloresMasVendidos = [
     { color: 'Negro', cantidad: 200 },
     { color: 'Blanco', cantidad: 150 },
@@ -62,13 +77,20 @@ const Estadisticas = () => {
     { ubicacion: 'Derecha', cantidad: 30 },
   ];
 
-  const estampasMasVendidas = [
-    { nombre: 'Estampa A', cantidad: 200 },
-    { nombre: 'Estampa B', cantidad: 180 },
-    { nombre: 'Estampa C', cantidad: 120 },
-  ];
+  // Configuración de gráficas
+  const barDataEstampas = {
+    labels: estampasMasVendidas.map((e) => e.nombre),
+    datasets: [
+      {
+        label: 'Ventas por Estampa',
+        data: estampasMasVendidas.map((e) => e.cantidad),
+        backgroundColor: ['#1abc9c', '#3498db', '#e74c3c', '#9b59b6', '#f1c40f'],
+        borderColor: ['#16a085', '#2980b9', '#c0392b', '#8e44ad', '#d4ac0d'],
+        borderWidth: 1,
+      },
+    ],
+  };
 
-  // Configuración de gráficos
   const lineDataVentas = {
     labels: ['Septiembre', 'Octubre', 'Noviembre'],
     datasets: [
@@ -117,19 +139,6 @@ const Estadisticas = () => {
     ],
   };
 
-  const barDataEstampas = {
-    labels: estampasMasVendidas.map((e) => e.nombre),
-    datasets: [
-      {
-        label: 'Ventas por Estampa',
-        data: estampasMasVendidas.map((e) => e.cantidad),
-        backgroundColor: ['#1abc9c', '#3498db', '#e74c3c'],
-        borderColor: ['#16a085', '#2980b9', '#c0392b'],
-        borderWidth: 1,
-      },
-    ],
-  };
-
   const barDataTamanoEstampado = {
     labels: tamanoEstampado.map((t) => t.tamano),
     datasets: [
@@ -171,51 +180,58 @@ const Estadisticas = () => {
     <div className="estadisticas-container">
       <h1>Estadísticas de la Tienda</h1>
 
-      <div className="estadistica">
-        <h3>Ventas Totales</h3>
-        <Line data={lineDataVentas} />
-        <p>Total: {ventasTotales} camisetas vendidas</p>
-      </div>
+      <div className="estadisticas-grid">
+        <div className="estadistica">
+          <h3>Ventas Totales</h3>
+          <Line data={lineDataVentas} />
+          <p>Total: {ventasTotales} camisetas vendidas</p>
+        </div>
 
-      <div className="estadistica">
-        <h3>Nuevos Clientes</h3>
-        <Line data={lineDataClientes} />
-        <p>Total: {clientes} clientes registrados</p>
-      </div>
+        <div className="estadistica">
+          <h3>Nuevos Clientes</h3>
+          <Line data={lineDataClientes} />
+          <p>Total: {clientes} clientes registrados</p>
+        </div>
 
-      <div className="estadistica">
-        <h3>Colores Más Vendidos</h3>
-        <Pie data={pieDataColores} />
-      </div>
+        <div className="estadistica">
+          <h3>Colores Más Vendidos</h3>
+          <Pie data={pieDataColores} />
+        </div>
 
-      <div className="estadistica">
-        <h3>Tallas Más Vendidas</h3>
-        <Pie data={pieDataTallas} />
-      </div>
+        <div className="estadistica">
+          <h3>Tallas Más Vendidas</h3>
+          <Pie data={pieDataTallas} />
+        </div>
 
-      <div className="estadistica">
-        <h3>Estampas Más Vendidas</h3>
-        <Bar data={barDataEstampas} options={{ responsive: true }} />
-      </div>
+        <div className="estadistica">
+          <h3>Estampas Más Vendidas</h3>
+          <Bar data={barDataEstampas} options={{ responsive: true }} />
+        </div>
 
-      <div className="estadistica">
-        <h3>Tamaño de Estampado Más Popular</h3>
-        <Bar data={barDataTamanoEstampado} options={{ responsive: true }} />
-      </div>
+        <div className="estadistica">
+          <h3>Recaudo Total</h3>
+          <p>Total Recaudado: ${recaudoTotal.toLocaleString()}</p>
+        </div>
 
-      <div className="estadistica">
-        <h3>Material Más Popular</h3>
-        <Pie data={pieDataMateriales} />
-      </div>
+        <div className="estadistica">
+          <h3>Tamaño de Estampado Más Popular</h3>
+          <Bar data={barDataTamanoEstampado} options={{ responsive: true }} />
+        </div>
 
-      <div className="estadistica">
-        <h3>Ubicación de Estampado Más Popular</h3>
-        <Bar data={barDataUbicaciones} options={{ responsive: true }} />
-      </div>
+        <div className="estadistica">
+          <h3>Material Más Popular</h3>
+          <Pie data={pieDataMateriales} />
+        </div>
 
-      <div className="estadistica">
-        <h3>Número de Artistas</h3>
-        <p>{artistas} artistas registrados</p>
+        <div className="estadistica">
+          <h3>Ubicación de Estampado Más Popular</h3>
+          <Bar data={barDataUbicaciones} options={{ responsive: true }} />
+        </div>
+
+        <div className="estadistica">
+          <h3>Número de Artistas</h3>
+          <p>{artistas} artistas registrados</p>
+        </div>
       </div>
     </div>
   );
