@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useAuth } from './Autenticacion';
 import './IniciarSesion.css';
+import axios from 'axios';
+import { Apiurl } from '../services/apirest';
 
 //Este es el componente más extenso, de eso estoy seguro
 //El inicio de sesión tiene su propio test, es necesario que lo tenga.
@@ -9,12 +11,12 @@ import './IniciarSesion.css';
 //Aquí hay validaciones y se muestran errores, sin embargo esto es solo un filtro en el Frontend, el Backend también las debe tener
 
 const IniciarSesion = () => {
-  const [email, setEmail] = useState('');
+  const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [toggleForm, setToggleForm] = useState(false);
-  const [rol, setRol] = useState('cliente');
+  const [rol, setRol] = useState("");
   const [nombre, setNombre] = useState('');
   const [nickname, setNickname] = useState('');
   const [numCelular, setNumCelular] = useState('');
@@ -25,25 +27,44 @@ const IniciarSesion = () => {
   const nombreRegex = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]{3,20}$/; 
   const nicknameRegex = /^[A-Za-z0-9]{3,15}$/; 
   const passwordRegex = /^(?=.*[A-Z].*[A-Z])(?=.*\d.*\d)(?=.*[A-Za-z\d@$!%*?&.])[A-Za-z\d@$!%*?&.]{7,30}$/; 
-  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
   // Control de límites de caracteres
   const [nombreLimitReached, setNombreLimitReached] = useState(false);
   const [nicknameLimitReached, setNicknameLimitReached] = useState(false);
   const [passwordLimitReached, setPasswordLimitReached] = useState(false);
-  const [emailLimitReached, setEmailLimitReached] = useState(false);
+  const [cedulaLimitReached, setCedulaLimitReached] = useState(false);
+  // async function getUsuarioPorCedula(cedula) {
+  //   try {
+  //     let url = `${Apiurl}/usuarios/login`;
+  //     const response = await axios.get(url);
+      
+  //     // Verifica si hay un error en la respuesta
+  //     if (response.data.error) {
+  //       console.error("Error al obtener el usuario:", response.data);
+  //       return null;
+  //     }
+  
+  //     // Obtén el objeto del usuario desde la respuesta
+  //     const usuario = response.data.body[0];
+  //     console.log("Usuario encontrado:", usuario);
+  //     return usuario;
+  //   } catch (error) {
+  //     console.error("Error en la solicitud:", error);
+  //     return null;
+  //   }
+  // }
 
   const handleSignInSubmit = (e) => {
     e.preventDefault();
     setError('');  // Limpia el mensaje de error antes de la verificación
-    if (email === 'admin@gmail.com' && password === '123') {
-      login('admin');
-    } else if (email === 'cliente@gmail.com' && password === '123') {
-      login('cliente');
-    } else if (email === 'artista@gmail.com' && password === '123') {
-      login('artista');
+    // const miUsuario =getUsuarioPorCedula(cedula);
+    // if(miUsuario.cedula === cedula && miUsuario.password === password){
+    //   login(miUsuario.rol);
+    // }else 
+    if (cedula === '1' && password === '123') {
+      login(rol);
     } else {
-      setError('Correo o contraseña incorrectos');
+      setError('Cedula o contraseña incorrectos');
     }
   };
   
@@ -66,8 +87,8 @@ const IniciarSesion = () => {
       setError('Las contraseñas no coinciden.');
       return;
     }
-    if (!email || !emailRegex.test(email)) {
-      setError('Correo electrónico inválido. Debe tener entre 5 y 35 caracteres.');
+    if (!cedula || cedula.length<8 || cedula.length>10) {
+      setError('Cedula inválida. Debe tener entre 8 y 10 caracteres.');
       return;
     }
     if (!rol) {
@@ -89,7 +110,7 @@ const IniciarSesion = () => {
   const handleToggle = () => {
     setToggleForm((prev) => !prev);
     setError(''); // Limpiar errores
-    setEmail('');
+    setCedula('');
     setPassword('');
     setConfirmPassword('');
     setRol('cliente');
@@ -110,21 +131,20 @@ const IniciarSesion = () => {
       <div className="container-form">
         <form className="log-in" data-testid="login-form" onSubmit={handleSignInSubmit}>
           <h2>Iniciar Sesión</h2>
-          <span><strong>Use su correo y contraseña</strong></span>
+          <span><strong>Use su cedula y contraseña</strong></span>
           <div className="container-input">
             <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
             <input
-              type="email"
-              placeholder="Email (Iniciar sesión)"
-              value={email}
-              onChange={handleInputChange(setEmail, setEmailLimitReached, 35)}
-              maxLength={35}
+              type="text"
+              placeholder="Cedula (Iniciar sesión)"
+              value={cedula}
+              onChange={handleInputChange(setCedula, setCedulaLimitReached, 20)}
+              maxLength={20}
               required
-              id="email-log-in"
-              aria-label="Correo electrónico"
-              data-testid="email-input-login"
+              id="cedula-log-in"
+              aria-label="Cedula"
             />
-            {emailLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
+            {cedulaLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
           <div className="container-input">
             <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
@@ -148,8 +168,12 @@ const IniciarSesion = () => {
                 data-testid="role-select-login"
                 aria-label="Rol de usuario"
               >
+                <option value="" disabled hidden>
+                  Selecciona tu rol
+                </option>
                 <option value="cliente">Cliente</option>
                 <option value="artista">Artista</option>
+                <option value="admin">Admin</option>
               </select>
             </label>
           </div>
@@ -161,15 +185,15 @@ const IniciarSesion = () => {
       <div className="container-form">
         <form className="sign-up" onSubmit={handleRegisterSubmit}>
           <h2>Registrarse</h2>
-          <span><strong>Use su correo electrónico para registrarse</strong></span>
+          <span><strong>Use su cedula para registrarse</strong></span>
           <div className="container-input">
             <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
             <input
               type="text"
               placeholder="Nombre"
               value={nombre}
-              onChange={handleInputChange(setNombre, setNombreLimitReached, 20)}
-              maxLength={20}
+              onChange={handleInputChange(setNombre, setNombreLimitReached, 40)}
+              maxLength={40}
               required
               aria-label="Nombre"
               data-testid="name-input-signup"
@@ -193,16 +217,15 @@ const IniciarSesion = () => {
           <div className="container-input">
             <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
             <input
-              type="email"
-              placeholder="Email (Registrarse)"
-              value={email}
-              onChange={handleInputChange(setEmail, setEmailLimitReached, 35)}
+              type="text"
+              placeholder="Cedula (Registrarse)"
+              value={cedula}
+              onChange={handleInputChange(setCedula, setCedulaLimitReached, 35)}
               maxLength={35}
               required
-              aria-label="Correo electrónico"
-              data-testid="email-input-signup"
+              aria-label="Cedula"
             />
-            {emailLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
+            {cedulaLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
           <div className="container-input">
             <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
@@ -284,7 +307,7 @@ const IniciarSesion = () => {
           <span className="mensaje-registro">Si aún no tiene una cuenta, regístrese para acceder a todas las funciones del sitio</span>
           <button className="button" data-testid="registro-button" type="button" onClick={() => { 
             handleToggle();
-            setEmail('');  // Limpia el campo de email
+            setCedula('');  // Limpia el campo de cedula
             setPassword('');  // Limpia el campo de contraseña
             setRol('cliente');  // Limpia el campo del rol
         }}>Regístrese Aquí
@@ -295,7 +318,7 @@ const IniciarSesion = () => {
           <span className="mensaje-login">Si ya tiene una cuenta, inicie sesión para acceder a todas las funciones del sitio</span>
           <button className="button" data-testid="inicio-button" type="button" onClick={() => {
               handleToggle();
-              setEmail('');  // Limpia el campo de email
+              setCedula('');  // Limpia el campo de cedula
               setPassword('');  // Limpia el campo de contraseña
               setRol('cliente');  // Limpia el campo del rol
           }}>Inicie Sesión Aquí

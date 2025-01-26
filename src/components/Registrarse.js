@@ -45,9 +45,10 @@ const Registrarse = () => {
     e.preventDefault();
   };
   const manejadorBoton = () =>{
+    setError("");
     
     // Validación de campos vacíos
-    if (!nombre || !cedula || !password || !numCelular || !direccionResidencia) {
+    if (!nombre || !cedula ||!nickname|| !password || !numCelular || !direccionResidencia) {
       setError('Por favor, completa todos los campos');
       return;
     }
@@ -59,8 +60,8 @@ const Registrarse = () => {
     }
 
     // Validación de longitud de nombre
-    if (nombre.length < 3 || nombre.length > 20) {
-      setError('El nombre debe tener entre 3 y 20 caracteres');
+    if (nombre.length < 3 || nombre.length > 40) {
+      setError('El nombre debe tener entre 3 y 40 caracteres');
       return;
     }
     //Validadación de longitud de DNI
@@ -78,6 +79,7 @@ const Registrarse = () => {
     // Validación de contraseña (números, letras, caracteres especiales)
     const passwordRegex = /^(?=.*[A-Z].*[A-Z])(?=.*\d.*\d)(?=.*[A-Za-z\d@$!%*?&.])(?=.*[!@$%^&*()_+=[\]{}|;:'",.<>/?\\/-]).{7,30}$/;
     if (!passwordRegex.test(password) || password.length > 30) {
+      
       setError('La contraseña debe tener al menos 4 letras, 4 números,1 caracter especial, 2 mayúsculas y no puede exceder los 30 caracteres');
       return;
     }
@@ -136,9 +138,9 @@ const Registrarse = () => {
   // Manejo de los caracteres restantes
   const handleNombreChange = (e) => {
     const value = e.target.value;
-    if (value.length <= 20) {
+    if (value.length <= 40) {
       setNombre(value);
-      setNombreMaxReached(value.length === 20);
+      setNombreMaxReached(value.length === 40);
     }
   };
 
@@ -196,10 +198,10 @@ const Registrarse = () => {
             value={nombre}
             onChange={handleNombreChange}
             minLength="3" // Requiere un mínimo de 3 caracteres
-            maxLength="20" // Limita el máximo a 20 caracteres
+            maxLength="40" // Limita el máximo a 20 caracteres
             required
           />
-          {nombreMaxReached && <p className="limit-warning">Se ha alcanzado el límite de caracteres (20).</p>}
+          {nombreMaxReached && <p className="limit-warning">Se ha alcanzado el límite de caracteres (40).</p>}
         </div>
 
         <div>
