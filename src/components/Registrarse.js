@@ -120,7 +120,7 @@ const Registrarse = () => {
     if (error.response) {
       // El servidor respondió con un código de error
       console.error('Error en el servidor:', error.response.data);
-      setError(`Error: ${error.response.data.message || 'Error al registrar usuario'}`);
+      setError(`Error: ${error.response.data.message || 'Usuario Ya Registrado'}`);
     } else if (error.request) {
       // No se recibió respuesta del servidor
       console.error('Sin respuesta del servidor:', error.request);

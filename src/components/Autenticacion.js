@@ -1,6 +1,7 @@
 // src\components\Autenticacion.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginBack } from '../services/authService';
 
 //Este fue uno de los componentes más hardcore, el sistema de autenticación por roles
 //Basicamente toda la aplicación esta envuelta por el AuthContext, 
@@ -33,21 +34,46 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Función para iniciar sesión
-  const login = (role) => {
-    if (!['admin', 'cliente', 'artista'].includes(role)) {
-      console.error('Rol de usuario inválido');
-      return;
+  const login = async (username, password, role) => {
+    try {
+      // Validación para el usuario administrador
+      if (username === "Admin" && password === "123" && role === "admin") {
+        actualizarEstadoYRedirigir(role);
+        return;
+      }
+  
+      // Llama al backend para obtener el rol
+      const RolID = await loginBack(username, password);
+      if (!RolID || RolID.error) {
+        throw new Error("Error al obtener el rol del usuario");
+      }
+  
+      // Asignar rol según el ID
+      const miRol = RolID === 1 ? "cliente" : RolID === 2 ? "artista" : null;
+  
+      // Validación del rol
+      if (!['admin', 'cliente', 'artista'].includes(miRol)) {
+        console.error("Rol de usuario inválido");
+        return;
+      }
+  
+      // Actualizar el estado y redirigir
+      actualizarEstadoYRedirigir(miRol);
+    } catch (error) {
+      throw error; // Propaga el error al nivel superior
     }
-
-    // Actualizar el estado y localStorage de manera conjunta
+  };
+  
+  // Función auxiliar para actualizar estado y redirigir
+  const actualizarEstadoYRedirigir = (role) => {
     setIsAuthenticated(true);
     setUserRole(role);
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('userRole', role);
-
-    // Redirigir según el rol del usuario
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("userRole", role);
+    console.log(role);
     navigateToRole(role);
   };
+  
 
   // Función para cerrar sesión
   const logout = () => {

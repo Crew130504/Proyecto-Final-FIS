@@ -1,10 +1,18 @@
 // src/context/AuthContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { login } from '../services/authService';
 //Esto probablemente ayude en el backend pero no creo, si quieren borrenlo que no se usa.
 
 // Crear el contexto
-export const AuthContext = createContext();
+const AuthContext = createContext();
+
+export const useAuthLogIn = (context) => {
+  // const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth debe ser usado con el AuthProvider');
+  }
+  return context;
+};
 
 // Componente AuthProvider
 export const AuthProvider = ({ children }) => {
@@ -13,12 +21,14 @@ export const AuthProvider = ({ children }) => {
 
   // Función para manejar el inicio de sesión
   const loginUser = async (username, password) => {
-    try {
-      const userData = await login(username, password);
-      setUser(userData); // Guarda la información del usuario
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-    }
+    console.log(username)
+    console.log(password)
+    // try {
+    //   const userData = await login(username, password);
+    //   setUser(userData); // Guarda la información del usuario
+    // } catch (error) {
+    //   console.error('Error al iniciar sesión:', error);
+    // }
   };
 
   // Función para manejar el cierre de sesión
