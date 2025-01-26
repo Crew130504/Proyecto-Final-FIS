@@ -76,7 +76,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/Carrito" element={<Carrito />} />
+            <Route
+              path="/Carrito"
+              element={
+                <ProtectedRoute allowedRole="cliente">
+                  <ProcesoCompra />
+                </ProtectedRoute>
+              }
+            />
             {/*La ruta de subir estampas esta protegida ya que solo la debe usar un artista autenticado */}
             <Route
               path="/Compras"
