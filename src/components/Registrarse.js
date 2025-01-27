@@ -210,8 +210,14 @@ const Registrarse = () => {
             type="number" // Cambié a texto para que pueda contener el formato adecuado
             placeholder="Cedula (8-10 dígitos)"
             value={cedula}
-            min={0}
+            min={0} 
             onChange={handleCedulaChange}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                e.preventDefault(); // Evita subir/bajar el número con las flechas
+              }
+            }}
+            onWheel={(e) => e.target.blur()}
             minLength="8" // Requiere un mínimo de 8 dígitos
             maxLength="10" // Limita el máximo a 10 dígitos
             required

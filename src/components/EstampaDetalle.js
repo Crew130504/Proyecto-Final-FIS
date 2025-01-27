@@ -23,30 +23,45 @@ const EstampaDetalle = ({ estampa, onClose }) => {
   const [mensajeError, setMensajeError] = useState(''); // Estado para el mensaje de error
   const [precioTotal, setPrecioTotal] = useState(estampa.precio); // Estado para el precio total
 
-   // Actualiza el precio total cada vez que cambia la cantidad
-   useEffect(() => {
-    setPrecioTotal(estampa.precio * cantidad);
+  // Actualiza el precio total cada vez que cambia la cantidad
+  useEffect(() => {
+    const cantidadValida = isNaN(cantidad) || cantidad === "" ? 0 : cantidad;
+    setPrecioTotal(estampa.precio * cantidadValida);
   }, [cantidad, estampa.precio]);
 
+
   const handleCantidadChange = (e) => {
-    let value = parseInt(e.target.value, 10);
+    const value = e.target.value;
   
-    if (value > estampa.disponibilidad) {
-      setMensajeError(`Solo hay ${estampa.disponibilidad} unidades disponibles.`);
-      value = estampa.disponibilidad;  // Limita la cantidad a la disponibilidad
-    } else if (value < 1) {
-      value = 1;  // Limita la cantidad a 1 como mínimo
-    } else {
-      setMensajeError('');
+    // Permitir cualquier valor intermedio, incluida una cadena vacía
+    if (value === "" || /^[0-9]*$/.test(value)) {
+      setCantidad(value); // Actualiza el estado con el valor sin validarlo
+      setMensajeError(""); // Limpia los mensajes de error
     }
-    setCantidad(value);
   };
+  
   
 
   const handleCantidadBlur = () => {
-    setCantidad((prevCantidad) => Math.min(estampa.disponibilidad, Math.max(1, prevCantidad)));
-    setMensajeError(''); // Limpia el mensaje de error cuando el usuario termina de editar
+    setCantidad((prevCantidad) => {
+      const numericValue = parseInt(prevCantidad, 10);
+  
+      if (isNaN(numericValue) || numericValue < 1) {
+        setMensajeError("La cantidad mínima es 1."); // Mensaje de error si es menor que 1
+        return 1;
+      }
+      if (numericValue > estampa.stock) {
+        setMensajeError(`Solo hay ${estampa.stock} unidades disponibles.`); // Mensaje si supera el máximo
+        return estampa.stock;
+      }
+  
+      setMensajeError(""); // Limpia los mensajes si todo está bien
+      return numericValue; // Devuelve el valor válido
+    });
   };
+  
+  
+
 
   // Seleccionar la imagen de la camiseta según el color
   const obtenerCamiseta = () => {
@@ -101,9 +116,9 @@ const EstampaDetalle = ({ estampa, onClose }) => {
       Cantidad: ${cantidad}
       Diseño: ${diseño === 'otro' ? descripcionPersonalizada : diseño}
       Precio Total: $${precioTotal.toLocaleString()}`);
-      
+
   };
-  
+
 
   return (
     <div className="detalle-contenedor">
@@ -117,13 +132,12 @@ const EstampaDetalle = ({ estampa, onClose }) => {
           <img
             src={estampa.imagen}
             alt={estampa.nombre}
-            className={`estampa-previsualizacion ${
-              tamañoEstampa === 'grande'
+            className={`estampa-previsualizacion ${tamañoEstampa === 'grande'
                 ? 'estampa-grande'
                 : tamañoEstampa === 'mediano'
-                ? 'estampa-mediano'
-                : 'estampa-pequeno'
-            }`}
+                  ? 'estampa-mediano'
+                  : 'estampa-pequeno'
+              }`}
             style={obtenerEstampaEstilo()}
           />
         </div>
@@ -132,7 +146,7 @@ const EstampaDetalle = ({ estampa, onClose }) => {
       <div className="detalle-info">
         <h2>{estampa.nombre}</h2>
         <span className="detalle-precio">Precio: ${estampa.precio.toLocaleString()}</span>
-        <span className="detalle-disponibilidad">Disponibilidad: {estampa.disponibilidad}</span>
+        <span className="detalle-disponibilidad">Disponibilidad: {estampa.stock}</span>
 
         {/* Opciones de personalización */}
         <label>
@@ -157,7 +171,7 @@ const EstampaDetalle = ({ estampa, onClose }) => {
         </label>
 
         <label>
-        Material:
+          Material:
           <select value={material} onChange={(e) => setMaterial(e.target.value)}>
             <option value="algodon">Algodon</option>
             <option value="poliester">Poliester</option>
@@ -191,42 +205,42 @@ const EstampaDetalle = ({ estampa, onClose }) => {
           <input
             type="number"
             min="1"
-            max={estampa.disponibilidad}
-            value={cantidad}
+            max={estampa.stock}
+            value={cantidad === "" ? "" : cantidad} // Muestra el campo vacío si cantidad es ""
             onChange={handleCantidadChange}
             onBlur={handleCantidadBlur}
+            className="input-cantidad"
           />
           {mensajeError && <p className="error-mensaje">{mensajeError}</p>} {/* Muestra el mensaje de error */}
         </label>
 
         <label>
-        Diseño:
-        <select value={diseño} onChange={(e) => setDiseño(e.target.value)}>
-          <option value="predeterminado">Predeterminado</option>
-          <option value="otro">Otro diseño</option>
-        </select>
-      </label>
-
-      {/* Muestra el campo de descripción solo si elige "Otro diseño" */}
-      {diseño === 'otro' && (
-        <label>
-          Descripción del diseño:
-          <textarea
-            placeholder="Escribe las especificaciones de tu diseño"
-            maxLength={30}
-            value={descripcionPersonalizada}
-            onChange={(e) => setDescripcionPersonalizada(e.target.value)}
-          />
-          <p className="caracteres-restantes">
-            {30 - descripcionPersonalizada.length} caracteres restantes
-          </p>
+          Diseño:
+          <select value={diseño} onChange={(e) => setDiseño(e.target.value)}>
+            <option value="predeterminado">Predeterminado</option>
+            <option value="otro">Otro diseño</option>
+          </select>
         </label>
-      )}
 
-        
-         {/* Muestra el precio total con separadores de miles */}
-        <p className="precio-total">Precio total: ${precioTotal.toLocaleString()}</p>
+        {/* Muestra el campo de descripción solo si elige "Otro diseño" */}
+        {diseño === 'otro' && (
+          <label>
+            Descripción del diseño:
+            <textarea
+              placeholder="Escribe las especificaciones de tu diseño"
+              maxLength={30}
+              value={descripcionPersonalizada}
+              onChange={(e) => setDescripcionPersonalizada(e.target.value)}
+            />
+            <p className="caracteres-restantes">
+              {30 - descripcionPersonalizada.length} caracteres restantes
+            </p>
+          </label>
+        )}
 
+
+        {/* Muestra el precio total con separadores de miles */}
+        <p className="precio-total">Precio total: ${isNaN(precioTotal) || precioTotal == null ? 0 : precioTotal.toLocaleString()}</p>
 
         {/* Botones */}
         <div className="detalle-botones">

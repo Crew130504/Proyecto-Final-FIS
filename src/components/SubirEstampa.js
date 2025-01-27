@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from './Autenticacion';
 import { Apiurl } from '../services/apirest';
 import './SubirEstampa.css';
 
@@ -9,9 +10,9 @@ const SubirEstampa = () => {
   const [precioEstampa, setPrecioEstampa] = useState('');
   const [stockEstampa, setStockEstampa] = useState('');
   const [imagenEstampa, setImagenEstampa] = useState(null);
-  const [cedulaEstampa, setCedulaEstampa] = useState('');
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const { oficialNickname } = useAuth();
 
   // Manejo dinámico de cambios en los inputs
   const handleChange = (e) => {
@@ -31,9 +32,6 @@ const SubirEstampa = () => {
       case 'stockEstampa':
         const stockValue = parseInt(value, 10);
         setStockEstampa(stockValue > 0 || value === '' ? value : stockEstampa); // Solo valores mayores a 0
-        break;
-      case 'cedulaEstampa':
-        setCedulaEstampa(value.slice(0, 15)); // Máximo 15 caracteres
         break;
       default:
         break;
@@ -73,53 +71,78 @@ const SubirEstampa = () => {
   const unformatPrice = (value) => {
     return value.replace(/[,.]/g, ''); // Elimina comas y puntos
   };
-  
+
   // Manejo del envío del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
-    if (!nombreEstampa || !descripcionEstampa || !precioEstampa || !stockEstampa || !imagenEstampa || !cedulaEstampa) {
-      setError('Por favor, completa todos los campos.');
-      return;
-    }
-    const priceValue=unformatPrice(precioEstampa);
-    if (priceValue < 10000 || priceValue > 500000) {
-      setError('El precio debe estar entre 10,000 y 500,000.'); 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError(""); // Limpia el mensaje de error
+  setMensaje(""); // Limpia el mensaje de éxito
+
+  try {
+    // Validaciones iniciales
+    if (!nombreEstampa || !descripcionEstampa || !precioEstampa || !stockEstampa || !imagenEstampa) {
+      setError("Por favor, completa todos los campos.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append('nombreEstampa', nombreEstampa);
-    formData.append('descripcionEstampa', descripcionEstampa);
-    formData.append('precio', priceValue);
-    formData.append('stock', stockEstampa);
-    formData.append('imagen', imagenEstampa);
-    formData.append('cedula', cedulaEstampa);
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
+    const priceValue = unformatPrice(precioEstampa); // Elimina comas para obtener el número
+    if (priceValue < 10000 || priceValue > 500000) {
+      setError("El precio debe estar entre 10,000 y 500,000.");
+      return;
     }
-    
-    const Url =Apiurl+"/estampas/crearEstampa";
-    fetch(Url, {
-      method: 'POST',
+
+    // Obtiene la cédula del usuario
+    const urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
+    const responseCedula = await fetch(urlCedula);
+
+    if (!responseCedula.ok) {
+      throw new Error(`Error en la solicitud al obtener la cédula: ${responseCedula.status}`);
+    }
+
+    const dataCedula = await responseCedula.json();
+    const cedula = dataCedula.body?.[0]?.cedula;
+
+    if (!cedula) {
+      throw new Error("No se encontró la cédula para el usuario.");
+    }
+
+    console.log("Cédula obtenida:", cedula);
+
+    // Prepara el FormData
+    const formData = new FormData();
+    formData.append("nombreEstampa", nombreEstampa);
+    formData.append("descripcionEstampa", descripcionEstampa);
+    formData.append("precio", priceValue);
+    formData.append("stock", stockEstampa);
+    formData.append("imagen", imagenEstampa);
+    formData.append("cedula", cedula);
+
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+
+    // Envío del formulario al backend
+    const Url = `${Apiurl}/estampas/crearEstampa`;
+    const response = await fetch(Url, {
+      method: "POST",
       body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data.error && data.status === 201) { // Si no hay error y el estado es 201
-          console.log("Chimba");
-          setMensaje('¡Estampa subida con éxito!');
-        } else {
-          console.log("Chimba 2");
-          console.log(data);
-          setError('Error al subir la estampa.');
-        }
-      })      
-      .catch((error) => {
-        console.log("Chimba3")
-        setError('Error de conexión: ' + error.message);
-      });
-  };
+    });
+
+    const data = await response.json();
+
+    if (!data.error && data.status === 201) {
+      console.log("¡Estampa subida con éxito!");
+      setMensaje("¡Estampa subida con éxito!");
+    } else {
+      console.log("Error al subir la estampa:", data);
+      setError(data.message || "Error al subir la estampa.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    setError("Error de conexión: " + error.message);
+  }
+};
+
 
   return (
     <div>
@@ -171,17 +194,6 @@ const SubirEstampa = () => {
             onChange={handleChange}
             required
             min="1"
-          />
-        </div>
-        <div>
-          <label htmlFor="cedulaEstampa">Cédula:</label>
-          <input
-            type="number"
-            id="cedulaEstampa"
-            name="cedulaEstampa"
-            value={cedulaEstampa}
-            onChange={handleChange}
-            required
           />
         </div>
         <div>
