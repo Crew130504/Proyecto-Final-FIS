@@ -1,5 +1,6 @@
 // src\components\IniciarSesion.js
 import React, { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Iconos de Font Awesome para el ojo
 import { useAuth } from './Autenticacion';
 import './IniciarSesion.css';
 import axios from 'axios';
@@ -16,12 +17,13 @@ const IniciarSesion = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [toggleForm, setToggleForm] = useState(false);
-  const [rol, setRol] = useState("");
+  const [rol, setRol] = useState('');
   const [nombre, setNombre] = useState('');
   const [nickname, setNickname] = useState('');
   const [numCelular, setNumCelular] = useState('');
   const [direccionResidencia, setDireccionResidencia] = useState('');
   const { login } = useAuth();
+  const [mensaje, setMensaje] = useState('');
 
   // Expresiones regulares para validaciones
   const nombreRegex = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]{3,20}$/; 
@@ -33,13 +35,21 @@ const IniciarSesion = () => {
   const [nicknameLimitReached, setNicknameLimitReached] = useState(false);
   const [passwordLimitReached, setPasswordLimitReached] = useState(false);
   const [cedulaLimitReached, setCedulaLimitReached] = useState(false);
+  // Estados para controlar la visibilidad de las contraseñas
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Función para alternar la visibilidad de la contraseña
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+  // Función para alternar la visibilidad de la confirmación de la contraseña
+  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
   
 
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Limpia el mensaje de error
     try {
-      await login(nickname, password, rol);
+      await login(cedula, password, rol);
     } catch (error) {
       // Maneja el error y define el mensaje al usuario
       if (error.message.includes("HTTP Error: 500")) {
@@ -54,6 +64,7 @@ const IniciarSesion = () => {
 
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
+    setError(""); // Limpia el mensaje de error
     if (!nombre || !nombreRegex.test(nombre)) {
       setError('Nombre inválido. Debe tener entre 3 y 20 caracteres y solo contener letras y espacios, sin caracteres especiales.');
       return;
@@ -87,7 +98,41 @@ const IniciarSesion = () => {
       return;
     }
 
-    login(rol);
+    // Construir el objeto de datos que se enviará en el POST
+    const datosFormulario = {
+      cedula: parseInt(cedula),           // Convertir la cedula a integer
+      nombre: nombre,                     // El nombre tal como está
+      username: nickname,                 // El nickname es el campo 'username' en la API
+      contraseña: password,               // La contraseña tal como está
+      direccion: direccionResidencia,     // Dirección tal como está
+      telefono: parseInt(numCelular),     // El teléfono se convierte en integer
+      idRol: rol === 'cliente' ? 1 : 2    // Asumimos que 'cliente' es 1 y 'artista' es 2, mapea según sea necesario
+    };
+
+    // URL de la API
+    let url = Apiurl + "/usuarios/crearUsuario";
+
+    // Hacer el POST con axios
+    axios.post(url, datosFormulario)
+      .then((response) => {
+        console.log('Registro exitoso:', response.data);
+        setMensaje('¡Registro exitoso, Inicie Sesion!');
+      })
+      .catch((error) => {
+        if (error.response) {
+          // El servidor respondió con un código de error
+          console.error('Error en el servidor:', error.response.data);
+          setError(`Error: ${error.response.data.message || 'Usuario Ya Registrado'}`);
+        } else if (error.request) {
+          // No se recibió respuesta del servidor
+          console.error('Sin respuesta del servidor:', error.request);
+          setError('No se pudo conectar con el servidor.');
+        } else {
+          // Otro tipo de error
+          console.error('Error al enviar la solicitud:', error.message);
+          setError('Error inesperado al registrar usuario.');
+        }
+      });
   };
 
   const handleToggle = () => {
@@ -114,18 +159,18 @@ const IniciarSesion = () => {
       <div className="container-form">
         <form className="log-in" data-testid="login-form" onSubmit={handleSignInSubmit}>
           <h2>Iniciar Sesión</h2>
-          <span><strong>Use su Usuario y contraseña</strong></span>
+          <span><strong>Use su Cedula y contraseña</strong></span>
           <div className="container-input">
             <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
             <input
               type="text"
-              placeholder="Usuario (Iniciar sesión)"
-              value={nickname}
-              onChange={handleInputChange(setNickname, setNicknameLimitReached, 20)}
-              maxLength={20}
+              placeholder="Cedula (Iniciar sesión)"
+              value={cedula}
+              onChange={handleInputChange(setCedula, setCedulaLimitReached, 20)}
+              maxLength={10}
               required
-              id="nickname-log-in"
-              aria-label="Nickname"
+              id="cedula-log-in"
+              aria-label="Cedula"
             />
             {cedulaLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
@@ -144,7 +189,7 @@ const IniciarSesion = () => {
             {passwordLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
           <div className="container-input">
-            <label>
+            
               <select
                 value={rol}
                 onChange={(e) => setRol(e.target.value)}
@@ -158,13 +203,11 @@ const IniciarSesion = () => {
                 <option value="artista">Artista</option>
                 <option value="admin">Admin</option>
               </select>
-            </label>
           </div>
           {error && <p data-testid="login-error-message" className="error">{error}</p>}
           <button type="submit" className="button" data-testid="login-button">Iniciar Sesión</button>
         </form>
       </div>
-  
       <div className="container-form">
         <form className="sign-up" onSubmit={handleRegisterSubmit}>
           <h2>Registrarse</h2>
@@ -213,7 +256,7 @@ const IniciarSesion = () => {
           <div className="container-input">
             <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // Alterna entre texto y contraseña
               placeholder="Password"
               value={password}
               onChange={handleInputChange(setPassword, setPasswordLimitReached, 30)}
@@ -224,10 +267,13 @@ const IniciarSesion = () => {
             />
             {passwordLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
+          <button type="button" onClick={togglePasswordVisibility} className="eye-icon">
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
           <div className="container-input">
             <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Confirmar Contraseña"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -237,6 +283,9 @@ const IniciarSesion = () => {
               data-testid="confirm-password-input-signup"
             />
           </div>
+          <button type="button" onClick={toggleConfirmPasswordVisibility} className="eye-icon">
+            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
           <div className="container-input">
             <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
             <input
@@ -280,6 +329,7 @@ const IniciarSesion = () => {
             </select>
           </label>
           {error && <p data-testid="sign-error-message" className="error">{error}</p>}
+          {mensaje && <p className="success">{mensaje}</p>}
           <button type="submit" className="button" data-testid="register-button">Registrarse</button>
         </form>
       </div>
@@ -303,7 +353,7 @@ const IniciarSesion = () => {
               handleToggle();
               setCedula('');  // Limpia el campo de cedula
               setPassword('');  // Limpia el campo de contraseña
-              setRol('cliente');  // Limpia el campo del rol
+              setRol('');  // Limpia el campo del rol
           }}>Inicie Sesión Aquí
           </button>
         </div>

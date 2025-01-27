@@ -1,7 +1,7 @@
 // src/services/authService.js
 import { Apiurl } from '../services/apirest';
 //Esto es para el backend, por si acaso, aunque no lo use en el frontend
-export const loginBack = async (username, password) => {
+ export const loginBack = async (username, password) => {
   try {
     const response = await fetch(Apiurl + "/usuarios/login", {
       method: 'POST',
