@@ -4,7 +4,7 @@ import App from './App';
 import { AuthProvider } from './components/Autenticacion';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-//Configuraciones del react o algo así
+//Configuraciones del react
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

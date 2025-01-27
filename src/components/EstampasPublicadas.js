@@ -1,43 +1,69 @@
 // src/components/EstampasPublicadas.js
 import React, { useState, useEffect } from 'react';
 import './EstampasPublicadas.css';
+import { useAuth } from './Autenticacion'; // Asegúrate de que useAuth esté bien importado
+import { Apiurl } from '../services/apirest';
 
 //Este componente es para mostrarle al artista las estampas que ha publicado y permitirle borrarlas 
 
 const EstampasPublicadas = () => {
   const [estampas, setEstampas] = useState([]);
+  const { oficialNickname } = useAuth();
 
-  // Simulamos la carga de estampas (se simula si no hay estampas en el localStorage)
   useEffect(() => {
-    const storedEstampas = JSON.parse(localStorage.getItem('estampas')) || [];
-
-    // Si no hay estampas en localStorage, agregamos algunas simuladas
-    if (storedEstampas.length === 0) {
-      const estampasSimuladas = [
-        {
-          id: 1,
-          nombre: 'Estampa Aventura',
-          imagen: 'https://via.placeholder.com/250x250?text=Estampa+Aventura',
-        },
-        {
-          id: 2,
-          nombre: 'Estampa Mariposa',
-          imagen: 'https://via.placeholder.com/250x250?text=Estampa+Mariposa',
-        },
-        {
-          id: 3,
-          nombre: 'Estampa Paisaje',
-          imagen: 'https://via.placeholder.com/250x250?text=Estampa+Paisaje',
-        },
-      ];
-
-      // Guardamos las estampas simuladas en localStorage
-      localStorage.setItem('estampas', JSON.stringify(estampasSimuladas));
-      setEstampas(estampasSimuladas);
-    } else {
-      setEstampas(storedEstampas);
-    }
-  }, []);
+    const fetchEstampas = async () => {
+      try {
+        // 1. Obtener la cédula del artista activo a partir del username (oficialNickname)
+        const urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
+        const responseCedula = await fetch(urlCedula);
+  
+        if (!responseCedula.ok) {
+          throw new Error(`Error al obtener la cédula: ${responseCedula.status}`);
+        }
+  
+        const dataCedula = await responseCedula.json();
+        const cedula = dataCedula.body?.[0]?.cedula;
+  
+        if (!cedula) {
+          throw new Error("No se encontró la cédula para el usuario activo.");
+        }
+  
+        console.log("Cédula obtenida:", cedula);
+  
+        // 2. Obtener las estampas asociadas a la cédula del artista
+        const urlEstampas = `${Apiurl}/estampas/artista/${cedula}`;
+        const responseEstampas = await fetch(urlEstampas);
+  
+        if (!responseEstampas.ok) {
+          throw new Error(`Error al obtener estampas: ${responseEstampas.status}`);
+        }
+  
+        const dataEstampas = await responseEstampas.json();
+  
+        if (!dataEstampas.body || !Array.isArray(dataEstampas.body)) {
+          throw new Error("La respuesta no contiene un array en el campo body.");
+        }
+  
+        // 3. Mapear las estampas directamente
+        const estampas = dataEstampas.body.map((estampa) => ({
+          id: estampa.codigoEstampa || null,
+          nombre: estampa.nombreEstampa || "Sin nombre",
+          descripcion: estampa.descripcionEstampa || "Sin descripción",
+          precio: estampa.precio || "0.00",
+          stock: estampa.stock || 0,
+          imagen: estampa.imagen || "",
+          autor: oficialNickname || "Desconocido", // Se usa el artista activo
+        }));
+  
+        setEstampas(estampas);
+      } catch (error) {
+        console.error("Error al obtener las estampas:", error.message);
+      }
+    };
+  
+    fetchEstampas();
+  }, [Apiurl, oficialNickname]); // Agrega oficialNickname como dependencia
+  
 
   const borrarEstampa = (id) => {
     const nuevasEstampas = estampas.filter((estampa) => estampa.id !== id);

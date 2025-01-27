@@ -12,29 +12,31 @@ import {
   Legend,
 } from 'chart.js';
 import './Estadisticas.css';
+import { Apiurl } from '../services/apirest';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Tooltip, Legend);
 
 const Estadisticas = () => {
   const [estampasMasVendidas, setEstampasMasVendidas] = useState([]);
   const [recaudoTotal, setRecaudoTotal] = useState(0);
-
+  
   // Efecto para fetchear datos
-  useEffect(() => {
-    // Obtener estampas más vendidas
-    fetch('/admin/stats/ev/5') // Cambia el límite según sea necesario
-      .then((response) => response.json())
-      .then((data) => {
-        setEstampasMasVendidas(data.map((item) => ({ nombre: item.codigo, cantidad: item.ventas })));
-      })
-      .catch((error) => console.error('Error al obtener estampas más vendidas:', error));
-
-    // Obtener recaudo total
-    fetch('/admin/stats/tr')
-      .then((response) => response.json())
-      .then((data) => setRecaudoTotal(data.total))
-      .catch((error) => console.error('Error al obtener recaudo total:', error));
-  }, []);
+  // useEffect(() => {
+  //   // Obtener estampas más vendidas
+  //   const urlMasVendidas = `${Apiurl}/admin/stats/ev/5`;
+  //   fetch(urlMasVendidas) // Cambia el límite según sea necesario
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setEstampasMasVendidas(data.map((item) => ({ nombre: item.codigo, cantidad: item.ventas })));
+  //     })
+  //     .catch((error) => console.error('Error al obtener estampas más vendidas:', error));
+  //     const urlRecaudoTotal = `${Apiurl}/admin/stats/tr`;
+  //   // Obtener recaudo total
+  //   fetch(urlRecaudoTotal)
+  //     .then((response) => response.json())
+  //     .then((data) => setRecaudoTotal(data.total))
+  //     .catch((error) => console.error('Error al obtener recaudo total:', error));
+  // }, []);
 
   // Datos quemados
   const ventasTotales = 500;
