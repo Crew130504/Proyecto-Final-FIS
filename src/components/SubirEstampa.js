@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Apiurl } from '../services/apirest';
 import './SubirEstampa.css';
 
 const SubirEstampa = () => {
@@ -10,6 +11,7 @@ const SubirEstampa = () => {
   const [imagenEstampa, setImagenEstampa] = useState(null);
   const [cedulaEstampa, setCedulaEstampa] = useState('');
   const [error, setError] = useState('');
+  const [mensaje, setMensaje] = useState('');
 
   // Manejo dinámico de cambios en los inputs
   const handleChange = (e) => {
@@ -40,6 +42,7 @@ const SubirEstampa = () => {
 
   // Manejo del cambio de imagen
   const handleImageChange = (e) => {
+    setError("");
     const file = e.target.files[0];
 
     if (file) {
@@ -67,43 +70,53 @@ const SubirEstampa = () => {
   const formatPrice = (value) => {
     return new Intl.NumberFormat().format(value);
   };
-
+  const unformatPrice = (value) => {
+    return value.replace(/[,.]/g, ''); // Elimina comas y puntos
+  };
+  
   // Manejo del envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setError("");
     if (!nombreEstampa || !descripcionEstampa || !precioEstampa || !stockEstampa || !imagenEstampa || !cedulaEstampa) {
       setError('Por favor, completa todos los campos.');
       return;
     }
-
-    const priceValue = parseInt(precioEstampa.replace(/,/g, ''), 10);
+    const priceValue=unformatPrice(precioEstampa);
     if (priceValue < 10000 || priceValue > 500000) {
-      setError('El precio debe estar entre 10,000 y 500,000.');
+      setError('El precio debe estar entre 10,000 y 500,000.'); 
       return;
     }
 
     const formData = new FormData();
-    formData.append('nombre', nombreEstampa);
-    formData.append('descripcion', descripcionEstampa);
+    formData.append('nombreEstampa', nombreEstampa);
+    formData.append('descripcionEstampa', descripcionEstampa);
     formData.append('precio', priceValue);
     formData.append('stock', stockEstampa);
     formData.append('imagen', imagenEstampa);
     formData.append('cedula', cedulaEstampa);
-
-    fetch('/api/subir-estampa', {
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+    
+    const Url =Apiurl+"/estampas/crearEstampa";
+    fetch(Url, {
       method: 'POST',
       body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
-          alert('¡Estampa subida con éxito!');
+        if (!data.error && data.status === 201) { // Si no hay error y el estado es 201
+          console.log("Chimba");
+          setMensaje('¡Estampa subida con éxito!');
         } else {
+          console.log("Chimba 2");
+          console.log(data);
           setError('Error al subir la estampa.');
         }
-      })
+      })      
       .catch((error) => {
+        console.log("Chimba3")
         setError('Error de conexión: ' + error.message);
       });
   };
@@ -183,6 +196,7 @@ const SubirEstampa = () => {
           />
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
+        {mensaje && <p className="success">{mensaje}</p>}
         <button type="submit">Subir Estampa</button>
       </form>
     </div>
