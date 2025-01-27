@@ -81,7 +81,6 @@ function Header() {
                   {userRole === 'artista' && (
                     <>
                       <li><a href="/SubirEstampa">Subir Estampas</a></li>
-                      <li><a href="/SubirDiseñoPersonalizado">Subir Diseños</a></li>
                       <li><a href="/EstampasPublicadas">Estampas Publicadas</a></li>
                     </>
                   )}

@@ -2,33 +2,74 @@
 import React, { useState, useEffect } from 'react'; // Asegúrate de importar useState y useEffect
 import { useAuth } from './Autenticacion'; // Asegúrate de que useAuth esté bien importado
 import './PerfilUsuarioCliente.css';
+import { Apiurl } from '../services/apirest';
 
 // Este componente muestra el perfil del cliente
 
 const PerfilUsuarioCliente = () => {
-    const { isAuthenticated, userRole } = useAuth();
+    const { isAuthenticated, userRole, oficialNickname } = useAuth();
     const [cliente, setCliente] = useState(null);
 
     useEffect(() => {
         // Cargar los datos directamente sin retraso
-        if (isAuthenticated && userRole === 'cliente') {
-            setCliente({
-                nombre: "Juan Pérez",
-                celular: "1234567890",
-                nickname: "Juancho",
-                correo: "juanperez@mail.com",
-                direccion: "Calle Ficticia 123",
-                compras: [
-                    { id: 1, producto: "Camiseta A", fecha: "2024-10-01" },
-                    { id: 2, producto: "Camiseta B", fecha: "2024-10-15" }
-                ],
-                carrito: [
-                    { id: 1, producto: "Camiseta C", cantidad: 2 },
-                    { id: 2, producto: "Camiseta D", cantidad: 1 }
-                ]
-            });
-        }
-    }, [isAuthenticated, userRole]);
+        const fetchClienteData = async () => {
+          try {
+            
+            if (isAuthenticated && userRole === "cliente") {
+              console.log("Nickname oficial:", oficialNickname);
+              console.log("Rol de usuario:", userRole);
+              let urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
+              // Llamada al primer endpoint para obtener la cédula
+              const responseCedula = await fetch(urlCedula);
+      
+              if (!responseCedula.ok) {
+                throw new Error(`Error en la primera solicitud: ${responseCedula.status}`);
+              }
+      
+              const dataCedula = await responseCedula.json();
+              console.log(dataCedula)
+              const cedula = dataCedula.body?.[0]?.cedula;
+              console.log(cedula)
+              if (!cedula) {
+                throw new Error("No se encontró la cédula para el usuario.");
+              }
+      
+              console.log("Cédula obtenida:", cedula);
+              let urlUsuario = `${Apiurl}/usuarios/${cedula}`;
+              // Llamada al segundo endpoint para obtener los datos del cliente
+              const responseUsuario = await fetch(urlUsuario);
+      
+              if (!responseUsuario.ok) {
+                throw new Error(`Error en la segunda solicitud: ${responseUsuario.status}`);
+              }
+      
+              const dataUsuario = await responseUsuario.json();
+              const usuario = dataUsuario.body?.[0];
+      
+              if (!usuario) {
+                throw new Error("No se encontraron datos del usuario.");
+              }
+      
+              console.log("Datos del usuario obtenidos:", usuario);
+      
+              // Actualiza el estado del cliente con los datos obtenidos
+              setCliente({
+                nombre: usuario.nombre,
+                celular: usuario.telefono,
+                nickname: usuario.username,
+                direccion: usuario.direccion,
+                compras: [], // Puedes actualizar este campo si tienes datos de compras
+                carrito: [] // Puedes actualizar este campo si tienes datos del carrito
+              });
+            }
+          } catch (error) {
+            console.error("Error al obtener los datos del cliente:", error.message);
+          }
+        };
+      
+        fetchClienteData();
+      }, [isAuthenticated, userRole, oficialNickname]); // Dependencias
+      
 
     // Verificar si el cliente es null, o si el usuario no está autenticado
     if (!isAuthenticated || userRole !== 'cliente' || cliente === null) {
@@ -42,7 +83,6 @@ const PerfilUsuarioCliente = () => {
                 <p><strong>Nombre:</strong> {cliente.nombre}</p>
                 <p><strong>Celular:</strong> {cliente.celular}</p>
                 <p><strong>Nickname:</strong> {cliente.nickname}</p>
-                <p><strong>Correo:</strong> {cliente.correo}</p>
                 <p><strong>Dirección:</strong> {cliente.direccion}</p>
             </div>
 

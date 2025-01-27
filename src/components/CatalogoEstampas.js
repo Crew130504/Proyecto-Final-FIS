@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EstampaDetalle from './EstampaDetalle'; 
+import EstampaDetalle from './EstampaDetalle';
 import { useAuth } from './Autenticacion';
 import { useNavigate } from 'react-router-dom';
 import { Apiurl } from '../services/apirest';
@@ -8,40 +8,74 @@ import './CatalogoEstampas.css';
 const CatalogoEstampas = () => {
   const [estampas, setEstampas] = useState([]);
   const [estampaSeleccionada, setEstampaSeleccionada] = useState(null);
-  const { isAuthenticated, userRole } = useAuth();
+  const { isAuthenticated, userRole} = useAuth();
   const navigate = useNavigate();
   const [orden, setOrden] = useState('');
-  const Url =Apiurl+"/estampas";
-  
+  const Url = Apiurl + "/estampas";
+
   useEffect(() => {
-    fetch(Url)
-      .then((response) => {
+    const fetchEstampas = async () => {
+      try {
+        // Obtiene las estampas
+        const response = await fetch(Url);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json();
-      })
-      .then((data) => {
+  
+        const data = await response.json();
         if (!data.body || !Array.isArray(data.body)) {
           throw new Error('La respuesta no contiene un array en el campo body.');
         }
   
-        // Mapear las estampas desde el body
-        setEstampas(
-          data.body.map((estampa) => ({
-            id: estampa.codigoEstampa || null,
-            nombre: estampa.nombreEstampa || 'Sin nombre',
-            descripcion: estampa.descripcionEstampa || 'Sin descripción',
-            precio: estampa.precio || '0.00',
-            stock: estampa.stock || 0,
-            imagen: estampa.imagen || '',
-            autor: estampa.cedula || 'Desconocido',
-          }))
-        );
-      })
-      .catch((error) => console.error('Error al obtener las estampas:', error.message));
-  }, [Url]); // Incluye Url en las dependencias para manejar cambios dinámicos
+        // Realiza solicitudes para obtener los usuarios de cada cédula
+        const estampasConUsuarios = await Promise.all(
+          data.body.map(async (estampa) => {
+            try {
+              const urlUsuario = `${Apiurl}/usuarios/${estampa.cedula}`;
+              const responseUsuario = await fetch(urlUsuario);
   
+              if (!responseUsuario.ok) {
+                throw new Error(`Error en la solicitud para la cédula ${estampa.cedula}: ${responseUsuario.status}`);
+              }
+  
+              const dataUsuario = await responseUsuario.json();
+              const usuario = dataUsuario.body?.[0];
+  
+              return {
+                id: estampa.codigoEstampa || null,
+                nombre: estampa.nombreEstampa || 'Sin nombre',
+                descripcion: estampa.descripcionEstampa || 'Sin descripción',
+                precio: estampa.precio || '0.00',
+                stock: estampa.stock || 0,
+                imagen: estampa.imagen || '',
+                autor: usuario?.username || 'Desconocido', // Asociar el usuario por cédula
+              };
+            } catch (error) {
+              console.error(`Error al obtener el usuario para la cédula ${estampa.cedula}:`, error.message);
+              return {
+                id: estampa.codigoEstampa || null,
+                nombre: estampa.nombreEstampa || 'Sin nombre',
+                descripcion: estampa.descripcionEstampa || 'Sin descripción',
+                precio: estampa.precio || '0.00',
+                stock: estampa.stock || 0,
+                imagen: estampa.imagen || '',
+                autor: 'Desconocido', // Si falla la solicitud, usar "Desconocido"
+              };
+            }
+          })
+        );
+  
+        setEstampas(estampasConUsuarios);
+      } catch (error) { 
+        console.error('Error al obtener las estampas:', error.message);
+      }
+    };
+  
+    fetchEstampas();
+  }, [Url, Apiurl]); // Incluye todas las dependencias necesarias
+  
+  
+
 
   const ordenarEstampas = (criterio) => {
     let ordenadas = [...estampas];

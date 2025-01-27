@@ -20,16 +20,20 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [oficialNickname,setOficialNickname]=useState(null);
   const navigate = useNavigate();
 
   // useEffect para verificar el estado inicial de autenticación
   useEffect(() => {
     const storedAuth = localStorage.getItem('isAuthenticated') === 'true'; // Asegura que sea un booleano
     const storedRole = localStorage.getItem('userRole');
+    const storedNickname = localStorage.getItem('oficialNickname');
+    console.log('Recuperando nickname:', storedNickname);
     
-    if (storedAuth && storedRole) {
+    if (storedAuth && storedRole && storedNickname) {
       setIsAuthenticated(true);
       setUserRole(storedRole);
+      setOficialNickname(storedNickname);
     }
   }, []);
 
@@ -37,8 +41,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password, role) => {
     try {
       // Validación para el usuario administrador
-      if (username === "Admin" && password === "123" && role === "admin") {
-        actualizarEstadoYRedirigir(role);
+      if (username === "Admin" && password === "123" && role === '3') {
+        actualizarEstadoYRedirigir("admin");
         return;
       }
   
@@ -47,30 +51,39 @@ export const AuthProvider = ({ children }) => {
       if (!RolID || RolID.error) {
         throw new Error("Error al obtener el rol del usuario");
       }
-  
-      // Asignar rol según el ID
+
+      if(RolID==role){
+        // Asignar rol según el ID
       const miRol = RolID === 1 ? "cliente" : RolID === 2 ? "artista" : null;
   
       // Validación del rol
-      if (!['admin', 'cliente', 'artista'].includes(miRol)) {
+      if (!['cliente', 'artista'].includes(miRol)) {
         console.error("Rol de usuario inválido");
         return;
       }
-  
+      console.log(username)
       // Actualizar el estado y redirigir
-      actualizarEstadoYRedirigir(miRol);
+      actualizarEstadoYRedirigir(miRol,username);
+      }else{
+        throw new Error("Usuario, Contraseña o Rol Incorrecto");
+      }
+  
+      
     } catch (error) {
+      console.log(error)
       throw error; // Propaga el error al nivel superior
     }
   };
   
   // Función auxiliar para actualizar estado y redirigir
-  const actualizarEstadoYRedirigir = (role) => {
+  const actualizarEstadoYRedirigir = (role,nickname) => {
     setIsAuthenticated(true);
     setUserRole(role);
+    setOficialNickname(nickname);
     localStorage.setItem("isAuthenticated", "true");
-    localStorage.setItem("userRole", role);
-    console.log(role);
+    localStorage.setItem('userRole', role);
+    console.log('Guardando nickname:', nickname);
+    localStorage.setItem('oficialNickname', nickname);
     navigateToRole(role);
   };
   
@@ -79,8 +92,10 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsAuthenticated(false);
     setUserRole(null);
+    setOficialNickname(null);
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('oficialNickname');
     
     // Redirigir a la página principal
     navigate('/');
@@ -98,7 +113,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userRole, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, userRole, oficialNickname, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -49,7 +49,7 @@ const IniciarSesion = () => {
     e.preventDefault();
     setError(""); // Limpia el mensaje de error
     try {
-      await login(cedula, password, rol);
+      await login(nickname, password, rol);
     } catch (error) {
       // Maneja el error y define el mensaje al usuario
       if (error.message.includes("HTTP Error: 500")) {
@@ -164,13 +164,13 @@ const IniciarSesion = () => {
             <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
             <input
               type="text"
-              placeholder="Cedula (Iniciar sesión)"
-              value={cedula}
-              onChange={handleInputChange(setCedula, setCedulaLimitReached, 20)}
+              placeholder="NickName (Iniciar sesión)"
+              value={nickname}
+              onChange={handleInputChange(setNickname, setNicknameLimitReached, 20)}
               maxLength={10}
               required
-              id="cedula-log-in"
-              aria-label="Cedula"
+              id="nickname-log-in"
+              aria-label="Nickname"
             />
             {cedulaLimitReached && <p className="limit-message">Se ha alcanzado el límite de caracteres</p>}
           </div>
@@ -199,9 +199,9 @@ const IniciarSesion = () => {
                 <option value="" disabled hidden>
                   Selecciona tu rol
                 </option>
-                <option value="cliente">Cliente</option>
-                <option value="artista">Artista</option>
-                <option value="admin">Admin</option>
+                <option value='1' >Cliente</option>
+                <option value='2'>Artista</option>
+                <option value='3'>Admin</option>
               </select>
           </div>
           {error && <p data-testid="login-error-message" className="error">{error}</p>}

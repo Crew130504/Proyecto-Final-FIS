@@ -13,12 +13,10 @@ import ProtectedRoute from './components/Proteccion_rutas'; // Importa Protected
 import Admin from './components/Admin'; // Importa el componente Admin
 import { AuthProvider } from './components/Autenticacion'; // Importa AuthProvider
 import SubirEstampa from './components/SubirEstampa';
-import SubirDiseñoPersonalizado from './components/SubirDiseñoPersonalizado';
 import EstampasPublicadas from './components/EstampasPublicadas';
 import Estadisticas from './components/Estadisticas';
 import Compras from './components/Compras';
 import ProcesoCompra from './components/ProcesoCompra';
-import DiseñosPersonalizadosDetalle from './components/DiseñosPersonalizadosDetalle';
 import PerfilUsuarioCliente from './components/PerfilUsuarioCliente'; // Componente Cliente
 import PerfilUsuarioArtista from './components/PerfilUsuarioArtista'; // Componente Artista
 //Importaciones para el footer
@@ -55,15 +53,6 @@ function App() {
             <Route path="/Contacto" element={<Contacto />} />    
             <Route path="/SoporteTecnico" element={<SoporteTecnico />} />
             
-            {/*La ruta del proceso de compras para diseños personalizados esta protegida ya que solo la debe usar un cliente autenticado */}
-            <Route
-              path="/DiseñosPersonalizadoDetalle"
-              element={
-                <ProtectedRoute allowedRole="cliente">
-                  <DiseñosPersonalizadosDetalle />
-                </ProtectedRoute>
-              }
-            />
 
             {/*La ruta del proceso de compras esta protegida ya que solo la debe usar un cliente autenticado */}
             <Route
@@ -100,15 +89,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/*La ruta para subir diseños personalizados esta protegida ya que solo la debe usar un artista autenticado */}
-            <Route
-              path="/SubirDiseñoPersonalizado"
-              element={
-                <ProtectedRoute allowedRole="artista">
-                  <SubirDiseñoPersonalizado />
-                </ProtectedRoute>
-              }
-            />            
+                   
             {/*La ruta de ver estampas publicadas esta protegida ya que solo la debe usar un artista autenticado */}
             <Route
               path="/EstampasPublicadas"
