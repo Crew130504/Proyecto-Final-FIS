@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EstampaDetalle from './EstampaDetalle'; 
 import { useAuth } from './Autenticacion';
 import { useNavigate } from 'react-router-dom';
+import { Apiurl } from '../services/apirest';
 import './CatalogoEstampas.css';
 
 const CatalogoEstampas = () => {
@@ -10,25 +11,37 @@ const CatalogoEstampas = () => {
   const { isAuthenticated, userRole } = useAuth();
   const navigate = useNavigate();
   const [orden, setOrden] = useState('');
-
+  const Url =Apiurl+"/estampas";
+  
   useEffect(() => {
-    fetch('/estampas')
-      .then((response) => response.json())
+    fetch(Url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
+        if (!data.body || !Array.isArray(data.body)) {
+          throw new Error('La respuesta no contiene un array en el campo body.');
+        }
+  
+        // Mapear las estampas desde el body
         setEstampas(
-          data.map((estampa) => ({
-            id: estampa.id,
-            nombre: estampa.nombreEstampa,
-            descripcion: estampa.descripcionEstampa,
-            precio: estampa.precio,
-            stock: estampa.stock,
-            imagen: estampa.imagen,
-            autor: estampa.cedula,
+          data.body.map((estampa) => ({
+            id: estampa.codigoEstampa || null,
+            nombre: estampa.nombreEstampa || 'Sin nombre',
+            descripcion: estampa.descripcionEstampa || 'Sin descripción',
+            precio: estampa.precio || '0.00',
+            stock: estampa.stock || 0,
+            imagen: estampa.imagen || '',
+            autor: estampa.cedula || 'Desconocido',
           }))
         );
       })
-      .catch((error) => console.error('Error al obtener las estampas:', error));
-  }, []);
+      .catch((error) => console.error('Error al obtener las estampas:', error.message));
+  }, [Url]); // Incluye Url en las dependencias para manejar cambios dinámicos
+  
 
   const ordenarEstampas = (criterio) => {
     let ordenadas = [...estampas];

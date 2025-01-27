@@ -44,7 +44,6 @@ function Header() {
           {userRole !== 'admin' && (
             <>
               <li><a href="/CatalogoEstampas">Catálogo Estampas</a></li>
-              <li><a href="/CatalogoDiseñosPersonalizados"> Diseños Personalizados</a></li>
             </>
           )}
 

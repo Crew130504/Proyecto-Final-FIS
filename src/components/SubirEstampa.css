@@ -98,6 +98,12 @@ body {
     text-align: center;
     margin-top: 10px;
 }
+.success {
+    color: green;
+    text-align: center;
+    font-size: 0.95rem;
+    margin-top: 10px;
+  }
 
 /* Asegurarse de que el formulario sea responsivo */
 @media (max-width: 768px) {

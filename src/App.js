@@ -18,7 +18,6 @@ import EstampasPublicadas from './components/EstampasPublicadas';
 import Estadisticas from './components/Estadisticas';
 import Compras from './components/Compras';
 import ProcesoCompra from './components/ProcesoCompra';
-import CatalogoDiseñosPersonalizados from './components/CatalogoDiseñosPersonalizados';
 import DiseñosPersonalizadosDetalle from './components/DiseñosPersonalizadosDetalle';
 import PerfilUsuarioCliente from './components/PerfilUsuarioCliente'; // Componente Cliente
 import PerfilUsuarioArtista from './components/PerfilUsuarioArtista'; // Componente Artista
@@ -51,7 +50,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Inicio />} />
             <Route path="/CatalogoEstampas" element={<CatalogoEstampas />} />
-            <Route path="/CatalogoDiseñosPersonalizados" element={<CatalogoDiseñosPersonalizados />} />
             <Route path="/Iniciar-sesion" element={<IniciarSesion />} />
             <Route path="/Registrarse" element={<Registrarse />} />
             <Route path="/Contacto" element={<Contacto />} />    
