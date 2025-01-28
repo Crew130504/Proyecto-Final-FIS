@@ -4,7 +4,7 @@ import { Apiurl } from '../services/apirest';
 import './SubirEstampa.css';
 
 const SubirEstampa = () => {
-  // Estados para los inputs
+  // Hooks de useState para manejar los inputs del formulario y mensajes de retroalimentación
   const [nombreEstampa, setNombreEstampa] = useState('');
   const [descripcionEstampa, setDescripcionEstampa] = useState('');
   const [precioEstampa, setPrecioEstampa] = useState('');
@@ -12,9 +12,10 @@ const SubirEstampa = () => {
   const [imagenEstampa, setImagenEstampa] = useState(null);
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
+  // Almacena el nickname del usuario autenticado
   const { oficialNickname } = useAuth();
 
-  // Manejo dinámico de cambios en los inputs
+  // Actualiza el estado dinámicamente según los cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -38,7 +39,7 @@ const SubirEstampa = () => {
     }
   };
 
-  // Manejo del cambio de imagen
+  // Valida y procesa el archivo de imagen cargado
   const handleImageChange = (e) => {
     setError("");
     const file = e.target.files[0];
@@ -64,34 +65,34 @@ const SubirEstampa = () => {
     }
   };
 
-  // Formatear precio con comas
+  // Formatea un valor numérico en un string con formato de precio
   const formatPrice = (value) => {
     return new Intl.NumberFormat().format(value);
   };
+  // Elimina el formato de un string de precio para extraer el valor numérico
   const unformatPrice = (value) => {
     return value.replace(/[,.]/g, ''); // Elimina comas y puntos
   };
 
-  // Manejo del envío del formulario
+  // Maneja el envío del formulario y se comunica con la API del backend
 const handleSubmit = async (e) => {
   e.preventDefault();
   setError(""); // Limpia el mensaje de error
   setMensaje(""); // Limpia el mensaje de éxito
 
   try {
-    // Validaciones iniciales
     if (!nombreEstampa || !descripcionEstampa || !precioEstampa || !stockEstampa || !imagenEstampa) {
       setError("Por favor, completa todos los campos.");
       return;
     }
 
-    const priceValue = unformatPrice(precioEstampa); // Elimina comas para obtener el número
+    const priceValue = unformatPrice(precioEstampa);
     if (priceValue < 10000 || priceValue > 500000) {
       setError("El precio debe estar entre 10,000 y 500,000.");
       return;
     }
 
-    // Obtiene la cédula del usuario
+    // Obtiene la cédula del usuario autenticado usando su nickname
     const urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
     const responseCedula = await fetch(urlCedula);
 
@@ -106,9 +107,7 @@ const handleSubmit = async (e) => {
       throw new Error("No se encontró la cédula para el usuario.");
     }
 
-    console.log("Cédula obtenida:", cedula);
-
-    // Prepara el FormData
+    // Prepara y agrega los datos del formulario para su envío a la API
     const formData = new FormData();
     formData.append("nombreEstampa", nombreEstampa);
     formData.append("descripcionEstampa", descripcionEstampa);
@@ -116,10 +115,6 @@ const handleSubmit = async (e) => {
     formData.append("stock", stockEstampa);
     formData.append("imagen", imagenEstampa);
     formData.append("cedula", cedula);
-
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
 
     // Envío del formulario al backend
     const Url = `${Apiurl}/estampas/crearEstampa`;
@@ -131,14 +126,11 @@ const handleSubmit = async (e) => {
     const data = await response.json();
 
     if (!data.error && data.status === 201) {
-      console.log("¡Estampa subida con éxito!");
       setMensaje("¡Estampa subida con éxito!");
     } else {
-      console.log("Error al subir la estampa:", data);
       setError(data.message || "Error al subir la estampa.");
     }
   } catch (error) {
-    console.error("Error:", error);
     setError("Error de conexión: " + error.message);
   }
 };
