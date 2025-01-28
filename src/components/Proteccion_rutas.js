@@ -4,7 +4,6 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './Autenticacion';
 
 //Estas son las rutas protegidas, digamos que previene que cualquier redirección de un usuario no autenticado a partes de la página que no debería ver
-//Este no tiene css porque claramente no es necesario, así que no le hagan uno.
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const { isAuthenticated, userRole } = useAuth();

@@ -1,49 +1,48 @@
 // src/components/Registrarse.js
 import React, { useState } from 'react';
 import './Registrarse.css';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Iconos de Font Awesome para el ojo
-//Servicios
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import { useNavigate } from 'react-router-dom'; 
 import { Apiurl } from '../services/apirest';
-//librerias back
 import axios from 'axios';
-//Este componente podrían pensar que es redundante pero no lo es.
-//Ofrece otra interfaz para poderse registrar directamente.
-//Además que incorpora una interfaz más amigable
-//Y aquí también hay validaciones.
 
 const Registrarse = () => {
+  // Hooks de useState para manejar los valores de los campos del formulario
   const [nombre, setNombre] = useState('');
-  const [nickname, setNickname] = useState(''); // Estado para el nickname
-  const [cedula, setCedula] = useState(''); // Estado para el nickname
+  const [nickname, setNickname] = useState(''); 
+  const [cedula, setCedula] = useState(''); 
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // Segundo campo de contraseña
+  const [confirmPassword, setConfirmPassword] = useState(''); 
   const [numCelular, setNumCelular] = useState('');
   const [direccionResidencia, setDireccionResidencia] = useState('');
   const [rol, setRol] = useState('cliente');
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
 
-  // Estados para controlar los caracteres restantes
+  // Estados para manejar la validación de caracteres máximos en cada campo
   const [nombreMaxReached, setNombreMaxReached] = useState(false);
   const [cedulaMaxReached, setCedulaMaxReached] = useState(false);
   const [passwordMaxReached, setPasswordMaxReached] = useState(false);
   const [celularMaxReached, setCelularMaxReached] = useState(false);
   const [direccionMaxReached, setDireccionMaxReached] = useState(false);
-  const [nicknameMaxReached, setNicknameMaxReached] = useState(false); // Estado para el límite del nickname
+  const [nicknameMaxReached, setNicknameMaxReached] = useState(false);
+  const navigate = useNavigate();
 
-  // Estados para controlar la visibilidad de las contraseñas
+  // Estados para alternar la visibilidad de los campos de contraseña
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Función para alternar la visibilidad de la contraseña
+  // Alterna la visibilidad del campo de contraseña principal
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  // Función para alternar la visibilidad de la confirmación de la contraseña
+  // Alterna la visibilidad del campo de confirmación de contraseña
   const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
-
+  // Maneja el evento de envío del formulario
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
+    navigate('Iniciar-sesion');
   };
+  // Maneja la lógica de validación y envío de datos al backend
   const manejadorBoton = () =>{
     setError("");
     
@@ -96,38 +95,33 @@ const Registrarse = () => {
       setError('La dirección debe tener entre 10 y 100 caracteres');
       return;
     }
-   // Construir el objeto de datos que se enviará en el POST
+   // Objeto que contiene los datos del formulario para ser enviado en la solicitud
    const datosFormulario = {
-    cedula: parseInt(cedula),           // Convertir la cedula a integer
-    nombre: nombre,                     // El nombre tal como está
-    username: nickname,                 // El nickname es el campo 'username' en la API
-    contraseña: password,               // La contraseña tal como está
-    direccion: direccionResidencia,     // Dirección tal como está
-    telefono: parseInt(numCelular),     // El teléfono se convierte en integer
-    idRol: rol === 'cliente' ? 1 : 2    // Asumimos que 'cliente' es 1 y 'artista' es 2, mapea según sea necesario
+    cedula: parseInt(cedula),           
+    nombre: nombre,                     
+    username: nickname,                 
+    contraseña: password,               
+    direccion: direccionResidencia,     
+    telefono: parseInt(numCelular),     
+    idRol: rol === 'cliente' ? 1 : 2    
   };
 
-  // URL de la API
+  // URL del endpoint de la API para registrar usuarios
   let url = Apiurl + "/usuarios/crearUsuario"; 
 
-  // Hacer el POST con axios
   axios.post(url, datosFormulario)
   .then((response) => {
-    console.log('Registro exitoso:', response.data);
     setMensaje('¡Registro exitoso!');
   })
   .catch((error) => {
     if (error.response) {
       // El servidor respondió con un código de error
-      console.error('Error en el servidor:', error.response.data);
       setError(`Error: ${error.response.data.message || 'Usuario Ya Registrado'}`);
     } else if (error.request) {
       // No se recibió respuesta del servidor
-      console.error('Sin respuesta del servidor:', error.request);
       setError('No se pudo conectar con el servidor.');
     } else {
       // Otro tipo de error
-      console.error('Error al enviar la solicitud:', error.message);
       setError('Error inesperado al registrar usuario.');
     }
   });
@@ -135,7 +129,7 @@ const Registrarse = () => {
 
   };
 
-  // Manejo de los caracteres restantes
+  // Manejo de los caracteres restantes para el Nombre
   const handleNombreChange = (e) => {
     const value = e.target.value;
     if (value.length <= 40) {
@@ -153,7 +147,7 @@ const Registrarse = () => {
     }
   };
 
-  // Manejo de los caracteres restantes
+  // Manejo de los caracteres restantes para la cedula
   const handleCedulaChange = (e) => {
     const value = e.target.value;
     if (value.length <= 20) {
@@ -161,7 +155,7 @@ const Registrarse = () => {
       setCedulaMaxReached(value.length === 20);
     }
   };
-
+  // Manejo de los caracteres restantes para la password
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     if (value.length <= 30) {
@@ -169,7 +163,7 @@ const Registrarse = () => {
       setPasswordMaxReached(value.length === 30);
     }
   };
-
+  // Manejo de los caracteres restantes para el Celular
   const handleCelularChange = (e) => {
     const value = e.target.value;
     if (value.length <= 15) {
@@ -177,7 +171,7 @@ const Registrarse = () => {
       setCelularMaxReached(value.length === 15);
     }
   };
-
+  // Manejo de los caracteres restantes para la Direccion
   const handleDireccionChange = (e) => {
     const value = e.target.value;
     if (value.length <= 100) {
