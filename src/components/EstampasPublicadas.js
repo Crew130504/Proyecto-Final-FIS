@@ -65,11 +65,24 @@ const EstampasPublicadas = () => {
   }, [Apiurl, oficialNickname]); // Agrega oficialNickname como dependencia
   
 
-  const borrarEstampa = (id) => {
-    const nuevasEstampas = estampas.filter((estampa) => estampa.id !== id);
-    setEstampas(nuevasEstampas);
-    localStorage.setItem('estampas', JSON.stringify(nuevasEstampas));
+  const borrarEstampa = async (id) => {
+    try {
+      const response = await fetch(`${Apiurl}/estampas/${id}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error al borrar la estampa con ID ${id}`);
+      }
+  
+      const nuevasEstampas = estampas.filter((estampa) => estampa.id !== id);
+      setEstampas(nuevasEstampas);
+      localStorage.setItem('estampas', JSON.stringify(nuevasEstampas));
+    } catch (error) {
+      console.error('Error eliminando la estampa:', error);
+    }
   };
+  
 
   return (
     <div className="estampas-container">
