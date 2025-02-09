@@ -67,7 +67,7 @@ function App() {
               path="/Carrito"
               element={
                 <ProtectedRoute allowedRole="cliente">
-                  <ProcesoCompra />
+                  <Carrito />
                 </ProtectedRoute>
               }
             />

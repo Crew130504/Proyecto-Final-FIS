@@ -8,7 +8,7 @@ import './CatalogoEstampas.css';
 const CatalogoEstampas = () => {
   const [estampas, setEstampas] = useState([]);
   const [estampaSeleccionada, setEstampaSeleccionada] = useState(null);
-  const { isAuthenticated, userRole} = useAuth();
+  const { isAuthenticated, userRole } = useAuth();
   const navigate = useNavigate();
   const [orden, setOrden] = useState('');
   const Url = Apiurl + "/estampas";
@@ -21,26 +21,26 @@ const CatalogoEstampas = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-  
+
         const data = await response.json();
         if (!data.body || !Array.isArray(data.body)) {
           throw new Error('La respuesta no contiene un array en el campo body.');
         }
-  
+
         // Realiza solicitudes para obtener los usuarios de cada cédula
         const estampasConUsuarios = await Promise.all(
           data.body.map(async (estampa) => {
             try {
               const urlUsuario = `${Apiurl}/usuarios/${estampa.cedula}`;
               const responseUsuario = await fetch(urlUsuario);
-  
+
               if (!responseUsuario.ok) {
                 throw new Error(`Error en la solicitud para la cédula ${estampa.cedula}: ${responseUsuario.status}`);
               }
-  
+
               const dataUsuario = await responseUsuario.json();
               const usuario = dataUsuario.body?.[0];
-  
+
               return {
                 id: estampa.codigoEstampa || null,
                 nombre: estampa.nombreEstampa || 'Sin nombre',
@@ -64,17 +64,17 @@ const CatalogoEstampas = () => {
             }
           })
         );
-  
+
         setEstampas(estampasConUsuarios);
-      } catch (error) { 
+      } catch (error) {
         console.error('Error al obtener las estampas:', error.message);
       }
     };
-  
+
     fetchEstampas();
   }, [Url, Apiurl]); // Incluye todas las dependencias necesarias
-  
-  
+
+
 
 
   const ordenarEstampas = (criterio) => {
@@ -124,22 +124,23 @@ const CatalogoEstampas = () => {
             </select>
           </div>
           <div className="catalogo">
-            {ordenarEstampas(orden).map((estampa) => (
-              <div
-                className="catalogo-item"
-                key={estampa.id}
-                onClick={() => handleSeleccionarEstampa(estampa)}
-              >
-                <img src={estampa.imagen} alt={estampa.nombre} className="catalogo-imagen" />
-                <h2 className="catalogo-titulo">{estampa.nombre}</h2>
-                <p className="catalogo-precio">Precio: ${estampa.precio.toLocaleString()}</p>
-                <p className="catalogo-stock">
-                  Disponibles: {estampa.stock > 0 ? estampa.stock : 'Agotado'}
-                </p>
-                <p className="catalogo-autor">Autor: {estampa.autor}</p>
-              </div>
-            ))}
+            {ordenarEstampas(orden)
+              .filter(estampa => estampa.stock > 0) // Filtrar estampas con stock > 0
+              .map((estampa) => (
+                <div
+                  className="catalogo-item"
+                  key={estampa.id}
+                  onClick={() => handleSeleccionarEstampa(estampa)}
+                >
+                  <img src={estampa.imagen} alt={estampa.nombre} className="catalogo-imagen" />
+                  <h2 className="catalogo-titulo">{estampa.nombre}</h2>
+                  <p className="catalogo-precio">Precio: ${estampa.precio.toLocaleString()}</p>
+                  <p className="catalogo-stock">Disponibles: {estampa.stock}</p>
+                  <p className="catalogo-autor">Autor: {estampa.autor}</p>
+                </div>
+              ))}
           </div>
+
         </div>
       )}
     </div>

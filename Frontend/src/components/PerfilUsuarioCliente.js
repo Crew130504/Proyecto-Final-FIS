@@ -16,8 +16,6 @@ const PerfilUsuarioCliente = () => {
           try {
             
             if (isAuthenticated && userRole === "cliente") {
-              console.log("Nickname oficial:", oficialNickname);
-              console.log("Rol de usuario:", userRole);
               let urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
               // Llamada al primer endpoint para obtener la cédula
               const responseCedula = await fetch(urlCedula);

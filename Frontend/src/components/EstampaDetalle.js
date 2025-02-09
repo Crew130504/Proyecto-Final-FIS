@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './EstampaDetalle.css';
 import { Apiurl } from '../services/apirest';
+import { useAuth } from './Autenticacion';
 
 //Este componente permite personalizar las estampas luego de seleccionarlas.
 //
@@ -23,6 +24,7 @@ const EstampaDetalle = ({ estampa, onClose }) => {
   const [descripcionPersonalizada, setDescripcionPersonalizada] = useState('');
   const [mensajeError, setMensajeError] = useState(''); // Estado para el mensaje de error
   const [precioTotal, setPrecioTotal] = useState(estampa.precio); // Estado para el precio total
+  const { isAuthenticated, userRole, oficialNickname } = useAuth();
 
   // Actualiza el precio total cada vez que cambia la cantidad
   useEffect(() => {
@@ -95,100 +97,155 @@ const EstampaDetalle = ({ estampa, onClose }) => {
     }
   };
 
-  const handleCompra = () => {
+  const handleCompra = async () => {
+    if (!isAuthenticated || userRole !== 'cliente') {
+        alert('Debes iniciar sesión como cliente para realizar una compra.');
+        return;
+    }
 
-    alert(`Comprando camiseta:
-      Color: ${color}
-      Talla: ${talla}
-      Material: ${material}
-      Ubicación: ${ubicacion}
-      Cantidad: ${cantidad}
-      Diseño: ${diseño === 'otro' ? descripcionPersonalizada : diseño}
-      Precio Total: $${precioTotal.toLocaleString()}`);
+    try {
+        // Paso 1: Obtener la cédula del cliente basado en su nickname
+        const urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
+        const responseCedula = await fetch(urlCedula);
 
-  };
+        if (!responseCedula.ok) {
+            throw new Error(`Error al obtener la cédula: ${responseCedula.status}`);
+        }
+
+        const dataCedula = await responseCedula.json();
+        const cedula = dataCedula.body?.[0]?.cedula;
+
+        if (!cedula) {
+            throw new Error('No se pudo encontrar la cédula del usuario.');
+        }
+
+        console.log('Cédula del cliente:', cedula);
+
+        // Paso 2: Preparar la data de la venta
+        const ventaData = {
+            cedula: cedula,
+            totalCompra: precioTotal,
+            detalles: [
+                {
+                    codigoEstampa: estampa.id,
+                    cantidad: cantidad,
+                    precioUnitario: estampa.precio,
+                    color: color,
+                    talla: talla,
+                    material: material,
+                    ubicacion: ubicacion,
+                    tamañoEstampa: tamañoEstampa,
+                    diseño: diseño,
+                    descripcionPersonalizada: diseño === 'otro' ? descripcionPersonalizada : null,
+                }
+            ]
+        };
+
+        // Paso 3: Enviar la venta al backend
+        const responseVenta = await fetch(`${Apiurl}/ventas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ventaData)
+        });
+
+        const result = await responseVenta.json();
+
+        if (responseVenta.ok) {
+            // Paso 4: Actualizar el stock de la estampa
+            const nuevoStock = estampa.stock - cantidad;
+            await actualizarEstampaEnBD(estampa, nuevoStock);  // Usamos la función existente
+
+            alert('¡Compra realizada exitosamente y stock actualizado!');
+            window.location.reload();
+        } else {
+            throw new Error(result.error || 'Error al registrar la compra.');
+        }
+    } catch (error) {
+        console.error('Error al realizar la compra:', error);
+        alert('Hubo un error al realizar la compra. Intenta nuevamente.');
+    }
+};
+
 
   // Función para agregar al carrito y actualizar el stock
 const handleAñadirAlCarrito = () => {
-  // Verificar si la cantidad seleccionada es mayor que el stock disponible
   if (cantidad > estampa.stock) {
     setMensajeError(`Solo hay ${estampa.stock} unidades disponibles.`);
     return;
   }
 
-  // Verificar si ya existe este producto en el carrito
   const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-  // Buscar si el producto ya está en el carrito
-  const productoExistente = carrito.find((item) => item.id === estampa.codigoEstampa);
+  const productoExistente = carrito.find((item) =>
+    item.id === estampa.codigoEstampa &&
+    item.color === color &&
+    item.talla === talla &&
+    item.material === material &&
+    item.ubicacion === ubicacion &&
+    item.tamañoEstampa === tamañoEstampa &&
+    item.diseño === diseño &&
+    item.descripcionPersonalizada === descripcionPersonalizada
+  );
 
   if (productoExistente) {
-    // Si ya existe, actualizar la cantidad
     productoExistente.cantidad += cantidad;
   } else {
-    // Si no existe, agregar el nuevo producto al carrito
     carrito.push({
-      id: estampa.codigoEstampa,
-      nombre: estampa.nombreEstampa,
+      id: estampa.id,
+      nombreEstampa: estampa.nombreEstampa,
+      descripcionEstampa: estampa.descripcionEstampa,
       cantidad: cantidad,
       precio: estampa.precio,
       color: color,
       talla: talla,
       material: material,
       ubicacion: ubicacion,
+      tamañoEstampa: tamañoEstampa,
       diseño: diseño,
+      descripcionPersonalizada: descripcionPersonalizada,
       imagen: estampa.imagen,
     });
   }
 
-  // Guardar el carrito actualizado en localStorage
   localStorage.setItem('carrito', JSON.stringify(carrito));
 
-  // Actualizar el stock en la base de datos
   const nuevoStock = estampa.stock - cantidad;
-
-  // Llamada a la función para actualizar la estampa en la base de datos
   actualizarEstampaEnBD(estampa, nuevoStock);
 
-  // Notificar al usuario que el producto fue agregado
-  alert(`Producto agregado al carrito: ${estampa.nombreEstampa} (${cantidad} unidades)`);
+  alert(`Producto agregado al carrito`);
+  window.location.reload();
 };
+
+  
 
 // Función para actualizar la estampa en la base de datos
 const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
   try {
     const response = await fetch(`${Apiurl}/estampas/modificarEstampa`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        codigoEstampa: estampa.codigoEstampa,  // Mandar todos los datos de la estampa
-        nombreEstampa: estampa.nombreEstampa,
-        descripcionEstampa: estampa.descripcionEstampa,
-        precio: estampa.precio,
-        stock: nuevoStock,  // Actualizamos el stock
-        imagen: estampa.imagen,
-        idClasificacion: estampa.idClasificacion,
-        idEstadoEstampa: estampa.idEstadoEstampa,
-        cedula: estampa.cedula,
+        codigoEstampa: estampa.id,
+        stock: nuevoStock,
       }),
     });
 
-    if (!response.ok) {
-      throw new Error('Error al modificar la estampa en la base de datos');
-    }
-
     const data = await response.json();
-    if (data.status !== 200) {
-      throw new Error('Error al modificar la estampa');
+    console.log('Respuesta de la API:', data);
+
+    if (!response.ok) {
+      throw new Error(`Error al modificar la estampa: ${data.error || response.statusText}`);
     }
 
-    console.log('Estampa actualizada con éxito en la base de datos');
+    console.log('Stock actualizado correctamente.');
   } catch (error) {
     console.error('Error al actualizar la estampa:', error);
   }
 };
+
+
 
 
   return (
