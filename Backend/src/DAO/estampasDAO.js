@@ -24,8 +24,8 @@ async function obtenerEstampasPorClasificacion(idClasificacion){
 }
 
 async function crearEstampa(estampa){
-    const query = 'INSERT INTO Estampas(nombreEstampa, descripcionEstampa, precio, stock, imagen, idClasificacion, idEstadoEstampa, cedula) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-    const params = [estampa.nombreEstampa, estampa.descripcionEstampa, estampa.precio, estampa.stock, estampa.imagen, 1, 1, estampa.cedula]
+    const query = 'INSERT INTO Estampas(nombreEstampa, descripcionEstampa, precio, stock, imagen, cedula) VALUES (?, ?, ?, ?, ?, ?)'
+    const params = [estampa.nombreEstampa, estampa.descripcionEstampa, estampa.precio, estampa.stock, estampa.imagen, estampa.cedula]
     return db.ejecutarQuery(query, params)
 }
 
