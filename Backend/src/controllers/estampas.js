@@ -244,7 +244,7 @@ router.post('/crearEstampa', upload.single('imagen'), modelo.crearEstampa)
  *      }
  *      
  */
-router.put('/modificarEstampa', upload.single('imagen'), modelo.modificarEstampa)
+router.put('/modificarEstampa', modelo.modificarEstampa);
 
 /**
  * @swagger

@@ -29,11 +29,16 @@ async function crearEstampa(estampa){
     return db.ejecutarQuery(query, params)
 }
 
-async function modificarEstampa(estampa){
-    const query = 'UPDATE Estampas SET nombreEstampa = ?, descripcionEstampa = ?, precio = ?, stock = ?, imagen = ?, idClasificacion = ?, idEstadoEstampa = ?, cedula = ? WHERE codigoEstampa = ?'
-    const params = [estampa.nombreEstampa, estampa.descripcionEstampa, estampa.precio, estampa.stock, estampa.imagen, 1, 1, estampa.cedula, estampa.codigoEstampa]
-    return db.ejecutarQuery(query, params)
+async function modificarEstampa(estampa) {
+    const query = 'UPDATE Estampas SET stock = ? WHERE codigoEstampa = ?';
+    const params = [estampa.stock, estampa.codigoEstampa];
+
+    console.log('Ejecutando query:', query, 'con parámetros:', params);
+
+    return db.ejecutarQuery(query, params);
 }
+
+
 
 async function eliminarEstampa(codigoEstampa) {
     const query = 'DELETE FROM Estampas WHERE codigoEstampa = ?'
