@@ -47,5 +47,6 @@
   "devDependencies": {
     "@testing-library/react": "^16.0.1",
     "jest": "^27.5.1"
-  }
+  },
+  "proxy": "https://fis-backend-production.up.railway.app"
 }

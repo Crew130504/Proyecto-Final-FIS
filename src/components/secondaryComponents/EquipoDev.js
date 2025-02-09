@@ -44,7 +44,6 @@ function EquipoDev() {
                 </div>
         </div>
       <div className="mensaje">
-        <h2>***o el que lo lea</h2>
       </div>
     </div>
   );

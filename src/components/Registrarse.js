@@ -40,7 +40,7 @@ const Registrarse = () => {
   // Maneja el evento de envío del formulario
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
-    navigate('Iniciar-sesion');
+    navigate('/Iniciar-sesion');
   };
   // Maneja la lógica de validación y envío de datos al backend
   const manejadorBoton = () =>{
