@@ -18,162 +18,96 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointEleme
 
 const Estadisticas = () => {
   const [estampasMasVendidas, setEstampasMasVendidas] = useState([]);
+  const [artistasMasVendidos, setArtistasMasVendidos] = useState([]);
   const [recaudoTotal, setRecaudoTotal] = useState(0);
+  const [recaudoTotalPorArtista, setRecaudoTotalPorArtista] = useState([]);
+  const [ventasTotales, setVentasTotales] = useState(0);
+  const [clientesTotales, setClientesTotales] = useState(0);
+
   
   // Efecto para fetchear datos
-  // useEffect(() => {
-  //   // Obtener estampas más vendidas
-  //   const urlMasVendidas = `${Apiurl}/admin/stats/ev/5`;
-  //   fetch(urlMasVendidas) // Cambia el límite según sea necesario
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setEstampasMasVendidas(data.map((item) => ({ nombre: item.codigo, cantidad: item.ventas })));
-  //     })
-  //     .catch((error) => console.error('Error al obtener estampas más vendidas:', error));
-  //     const urlRecaudoTotal = `${Apiurl}/admin/stats/tr`;
-  //   // Obtener recaudo total
-  //   fetch(urlRecaudoTotal)
-  //     .then((response) => response.json())
-  //     .then((data) => setRecaudoTotal(data.total))
-  //     .catch((error) => console.error('Error al obtener recaudo total:', error));
-  // }, []);
+  useEffect(() => {
+    // Obtener estampas más vendidas
+    fetch(`${Apiurl}/admin/stats/ev/5`) // Cambia el límite según sea necesario
+      .then((response) => response.json())
+      .then((data) => {
+        const datos = data.body[0];
+        setEstampasMasVendidas(datos);
+      })
+      .catch((error) => console.error('Error al obtener estampas más vendidas:', error));
 
-  // Datos quemados
-  const ventasTotales = 500;
-  const clientes = 200;
-  const artistas = 10;
-  const ventasPorMes = [120, 150, 230];
-  const clientesPorMes = [40, 65, 95];
-  const coloresMasVendidos = [
-    { color: 'Negro', cantidad: 200 },
-    { color: 'Blanco', cantidad: 150 },
-    { color: 'Rojo', cantidad: 100 },
-    { color: 'Azul', cantidad: 50 },
-  ];
+    // Obtener artistas más vendidos
+    fetch(`${Apiurl}/admin/stats/av/5`) // Cambia el límite según sea necesario
+      .then((response) => response.json())
+      .then((data) => {
+        const datos = data.body[0];
+        setArtistasMasVendidos(datos);
+      })
+      .catch((error) => console.error('Error al obtener artistas más vendidos:', error));
 
-  const tallasMasVendidas = [
-    { talla: 'S', cantidad: 110 },
-    { talla: 'M', cantidad: 180 },
-    { talla: 'L', cantidad: 160 },
-    { talla: 'XL', cantidad: 50 },
-  ];
+    // Obtener recaudo total
+    fetch(`${Apiurl}/admin/stats/tr`)
+      .then((response) => response.json())
+      .then((data) => {
+        const datos = data.body[0];
+        setRecaudoTotal(datos[0].total);
+      })
+      .catch((error) => console.error('Error al obtener recaudo total:', error));
 
-  const tamanoEstampado = [
-    { tamano: 'Pequeño', cantidad: 150 },
-    { tamano: 'Mediano', cantidad: 250 },
-    { tamano: 'Grande', cantidad: 100 },
-  ];
+    // Obtener recaudo total por artista
+    fetch(`${Apiurl}/admin/stats/ra/0`)
+      .then((response) => response.json())
+      .then((data) => {
+        const datos = data.body[0];
+        setRecaudoTotalPorArtista(datos);
+      })
+      .catch((error) => console.error('Error al obtener recaudo total por artista:', error));
+    
+      // Obtener ventas totales
+    fetch(`${Apiurl}/admin/stats/vt`)
+      .then((response) => response.json())
+      .then((data) => {
+        const datos = data.body[0];
+        setVentasTotales(datos[0].total);
+      })
+      .catch((error) => console.error('Error al obtener ventas totales:', error));
 
-  const materialesMasPopulares = [
-    { material: 'Algodón', cantidad: 260 },
-    { material: 'Poliéster', cantidad: 150 },
-    { material: 'Seda', cantidad: 60 },
-    { material: 'Rayón', cantidad: 30 },
-  ];
+    // Obtener clientes totales
+    fetch(`${Apiurl}/admin/stats/ct`)
+      .then((response) => response.json())
+      .then((data) => {
+        const datos = data.body[0];
+        setClientesTotales(datos[0].total);
+      })
+      .catch((error) => console.error('Error al obtener clientes totales:', error)); 
+  }, []);
 
-  const ubicacionesEstampado = [
-    { ubicacion: 'Central', cantidad: 200 },
-    { ubicacion: 'Superior', cantidad: 150 },
-    { ubicacion: 'Inferior', cantidad: 80 },
-    { ubicacion: 'Izquierda', cantidad: 40 },
-    { ubicacion: 'Derecha', cantidad: 30 },
-  ];
-
-  // Configuración de gráficas
   const barDataEstampas = {
-    labels: estampasMasVendidas.map((e) => e.nombre),
+    labels: estampasMasVendidas.map((e) => e.nombreEstampa),
     datasets: [
       {
         label: 'Ventas por Estampa',
-        data: estampasMasVendidas.map((e) => e.cantidad),
-        backgroundColor: ['#1abc9c', '#3498db', '#e74c3c', '#9b59b6', '#f1c40f'],
-        borderColor: ['#16a085', '#2980b9', '#c0392b', '#8e44ad', '#d4ac0d'],
-        borderWidth: 1,
+        data: estampasMasVendidas.map((e) => e.total),
       },
     ],
   };
 
-  const lineDataVentas = {
-    labels: ['Septiembre', 'Octubre', 'Noviembre'],
+  const barDataArtistasMasVendidos = {
+    labels: artistasMasVendidos.map((a) => a.username),
     datasets: [
       {
-        label: 'Ventas Totales',
-        data: ventasPorMes,
-        borderColor: '#3498db',
-        backgroundColor: 'rgba(52, 152, 219, 0.2)',
-        borderWidth: 2,
+        label: 'Ventas por Artista',
+        data: artistasMasVendidos.map((a) => a.total),
       },
     ],
   };
 
-  const lineDataClientes = {
-    labels: ['Septiembre', 'Octubre', 'Noviembre'],
+  const barDataRecaudoPorArtista = {
+    labels: recaudoTotalPorArtista.map((a) => a.username),
     datasets: [
       {
-        label: 'Nuevos Clientes',
-        data: clientesPorMes,
-        borderColor: '#e67e22',
-        backgroundColor: 'rgba(230, 126, 34, 0.2)',
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const pieDataColores = {
-    labels: coloresMasVendidos.map((c) => c.color),
-    datasets: [
-      {
-        data: coloresMasVendidos.map((c) => c.cantidad),
-        backgroundColor: ['#000000', '#ffffff', '#e74c3c', '#3498db'],
-        borderColor: '#ccc',
-      },
-    ],
-  };
-
-  const pieDataTallas = {
-    labels: tallasMasVendidas.map((t) => t.talla),
-    datasets: [
-      {
-        data: tallasMasVendidas.map((t) => t.cantidad),
-        backgroundColor: ['#8e44ad', '#27ae60', '#2980b9', '#c0392b'],
-        borderColor: '#ccc',
-      },
-    ],
-  };
-
-  const barDataTamanoEstampado = {
-    labels: tamanoEstampado.map((t) => t.tamano),
-    datasets: [
-      {
-        label: 'Tamaños más populares',
-        data: tamanoEstampado.map((t) => t.cantidad),
-        backgroundColor: ['#f1c40f', '#e67e22', '#9b59b6'],
-        borderColor: ['#d4ac0d', '#ca6f1e', '#76448a'],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const pieDataMateriales = {
-    labels: materialesMasPopulares.map((m) => m.material),
-    datasets: [
-      {
-        data: materialesMasPopulares.map((m) => m.cantidad),
-        backgroundColor: ['#1abc9c', '#3498db', '#e74c3c', '#f39c12'],
-        borderColor: '#ccc',
-      },
-    ],
-  };
-
-  const barDataUbicaciones = {
-    labels: ubicacionesEstampado.map((u) => u.ubicacion),
-    datasets: [
-      {
-        label: 'Ubicaciones más populares',
-        data: ubicacionesEstampado.map((u) => u.cantidad),
-        backgroundColor: ['#34495e', '#2ecc71', '#3498db', '#e74c3c', '#9b59b6'],
-        borderColor: ['#2c3e50', '#27ae60', '#2980b9', '#c0392b', '#8e44ad'],
-        borderWidth: 1,
+        label: 'Recaudo por Artista',
+        data: recaudoTotalPorArtista.map((a) => a.total),
       },
     ],
   };
@@ -181,62 +115,35 @@ const Estadisticas = () => {
   return (
     <div className="estadisticas-container">
       <h1>Estadísticas de la Tienda</h1>
-
-      <div className="estadisticas-grid">
+      <div className='estadisticas-grid'>
         <div className="estadistica">
-          <h3>Ventas Totales</h3>
-          <Line data={lineDataVentas} />
-          <p>Total: {ventasTotales} camisetas vendidas</p>
+          <h3>Recaudo total</h3>
+          <p>${recaudoTotal}</p>
         </div>
-
         <div className="estadistica">
-          <h3>Nuevos Clientes</h3>
-          <Line data={lineDataClientes} />
-          <p>Total: {clientes} clientes registrados</p>
+          <h3>Ventas totales</h3>
+          <p>{ventasTotales}</p>
         </div>
-
         <div className="estadistica">
-          <h3>Colores Más Vendidos</h3>
-          <Pie data={pieDataColores} />
+          <h3>Clientes totales</h3>
+          <p>{clientesTotales}</p>
         </div>
-
         <div className="estadistica">
-          <h3>Tallas Más Vendidas</h3>
-          <Pie data={pieDataTallas} />
-        </div>
-
-        <div className="estadistica">
-          <h3>Estampas Más Vendidas</h3>
+          <h3>Estampas más vendidas</h3>
           <Bar data={barDataEstampas} options={{ responsive: true }} />
         </div>
-
         <div className="estadistica">
-          <h3>Recaudo Total</h3>
-          <p>Total Recaudado: ${recaudoTotal.toLocaleString()}</p>
+          <h3>Artistas con mas ventas</h3>
+          <Bar data={barDataArtistasMasVendidos} options={{ responsive: true }} />
         </div>
-
         <div className="estadistica">
-          <h3>Tamaño de Estampado Más Popular</h3>
-          <Bar data={barDataTamanoEstampado} options={{ responsive: true }} />
-        </div>
-
-        <div className="estadistica">
-          <h3>Material Más Popular</h3>
-          <Pie data={pieDataMateriales} />
-        </div>
-
-        <div className="estadistica">
-          <h3>Ubicación de Estampado Más Popular</h3>
-          <Bar data={barDataUbicaciones} options={{ responsive: true }} />
-        </div>
-
-        <div className="estadistica">
-          <h3>Número de Artistas</h3>
-          <p>{artistas} artistas registrados</p>
+          <h3>Recaudo por Artista</h3>
+          <Bar data={barDataRecaudoPorArtista} options={{ responsive: true }} />
         </div>
       </div>
     </div>
   );
+
 };
 
 export default Estadisticas;
