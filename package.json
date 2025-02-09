@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
+    "boceto_1": "file:",
     "chart.js": "^4.4.6",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
