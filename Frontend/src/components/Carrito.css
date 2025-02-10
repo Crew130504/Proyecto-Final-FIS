@@ -1,105 +1,113 @@
-/*src\components\Carrito.css */
-/* Carrito.css */
-.carrito-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+  /* src/components/ProcesoCompra.css */
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+  .proceso-compra-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .proceso-compra-lista {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .proceso-compra-item {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .proceso-compra-imagen {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    
+    .proceso-compra-info {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .proceso-compra-info h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+    
+    .proceso-compra-info p {
+      margin: 5px 0;
+      color: #555;
+    }
+    
+    .proceso-compra-total {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    
+    .proceso-compra-btn {
+      padding: 8px 16px;
+      margin-top: 10px;
+      
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .eliminar {
+      background-color: #f44336;
+      color: #fff;
+    }
+    
+    .eliminar:hover {
+      background-color: #d32f2f;
+    }
+    
+    .comprar {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+    
+    .comprar:hover {
+      background-color: #388E3C;
+    }
 
-.carrito-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
+    .proceso-compra-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;                /* Activa Flexbox */
+      flex-direction: column;       /* Asegura que los elementos estén en columna */
+      align-items: center;          /* Centra todos los elementos horizontalmente */
+  }
+  
+  .proceso-compra-item, .proceso-compra-total {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .botones-container {
+    display: flex;
+    justify-content: center;   /* Centra los botones horizontalmente */
+    gap: 10px;                 /* Espacio entre los botones */
+    margin-top: 10px;
+    width: 100%;
+  }
+  
 
-.carrito-item {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  transition: transform 0.3s ease;
-}
-
-.carrito-item:hover {
-  transform: translateY(-5px);
-}
-
-.carrito-imagen {
-  width: 100%;
-  height: auto;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.carrito-info {
-  width: 100%;
-  padding: 10px;
-  text-align: left;
-}
-
-.carrito-info h3 {
-  margin: 10px 0;
-  font-size: 1.2em;
-  color: #333;
-}
-
-.carrito-info p {
-  margin: 5px 0;
-  font-size: 0.9em;
-  color: #555;
-}
-
-.carrito-buttons {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 10px;
-}
-
-.carrito-btn {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9em;
-}
-
-.eliminar {
-  background-color: #e74c3c;
-  color: white;
-}
-
-.comprar {
-  background-color: #3498db;
-  color: white;
-}
-
-.comprar-todo {
-  display: block;
-  margin: 20px auto;
-  padding: 12px 20px;
-  font-size: 1em;
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.comprar-todo:hover,
-.carrito-btn:hover {
-  opacity: 0.9;
-}
+    

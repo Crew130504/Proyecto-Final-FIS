@@ -16,11 +16,6 @@ const ProtectedRoute = ({ children, allowedRole }) => {
     }
   }, [isAuthenticated, userRole]);
 
-  // Log para verificar el estado de autenticación y el rol
-  console.log("Authenticated:", isAuthenticated);
-  console.log("User Role:", userRole);
-  console.log("Loading:", loading);
-
   // Mientras el estado de autenticación esté cargando, no renderizar nada
   if (loading) {
     return null; // O un spinner de carga, según el diseño de tu aplicación

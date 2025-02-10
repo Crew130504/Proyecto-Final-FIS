@@ -1,1 +1,0 @@
-Esta carpeta permite tener un AuthContext para poder así hacer más facil la autenticación del usuario.

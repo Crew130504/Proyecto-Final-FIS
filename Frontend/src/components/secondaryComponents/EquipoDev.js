@@ -15,32 +15,32 @@ function EquipoDev() {
       <div className="miembros">
         <div className="miembro">
           <img src={miembro1} alt="Miembro 1" className="miembro-imagen" />
-          <h2>Juan Pérez</h2>
-          <p>Frontend Developer - Especialista en React y diseño web moderno.</p>
+          <h2>Camilo Rodríguez Gutierrez </h2>
+          <p>Scrum  Master - Backend Developer</p>
         </div>
 
         <div className="miembro">
           <img src={miembro2} alt="Miembro 2" className="miembro-imagen" />
-          <h2>Juan Pérez</h2>
-          <p>Backend Developer - Experto en Node.js y bases de datos SQL.</p>
+          <h2>Juan Sebastián López Bogotá</h2>
+          <p>Product Owner - Frontend Developer</p>
         </div>
 
         <div className="miembro">
           <img src={miembro3} alt="Miembro 3" className="miembro-imagen" />
-          <h2>Juan Pérez</h2>
-          <p>Full Stack Developer - Con experiencia en el desarrollo de aplicaciones completas.</p>
+          <h2>Juan Pablo Angulo</h2>
+          <p>Dev.Team - Full Stack Developer </p>
         </div>
 
         <div className="miembro">
             <img src={miembro4} alt="Miembro 4" className="miembro-imagen" />
-            <h2>Juan Pérezz</h2>
-            <p>Full Stack Developer - Con experiencia en el desarrollo de aplicaciones completas.</p>
+            <h2>Jefferson David Ortiz Buitrago </h2>
+            <p>Dev.team - Frontend Developer</p>
         </div>
 
             <div className="miembro">
                 <img src={miembro5} alt="Miembro 5" className="miembro-imagen" />
-                <h2>Juan Pérez</h2>
-                <p>Full Stack Developer - Con experiencia en el desarrollo de aplicaciones completas.</p>
+                <h2>Andrés Jose Acevedo </h2>
+                <p>Dev.team - Frontend Developer</p>
                 </div>
         </div>
       <div className="mensaje">

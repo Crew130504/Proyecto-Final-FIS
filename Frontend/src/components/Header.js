@@ -50,8 +50,7 @@ function Header() {
           {/* Opciones para usuarios no autenticados */}
           {!isAuthenticated && (
             <>
-              <li><a href="/Iniciar-sesion">Iniciar Sesión</a></li>
-              <li><a href="/Registrarse">Registrarse</a></li>
+              <li><a href="/Iniciar-sesion">Sign in/ Login</a></li>              
             </>
           )}
 

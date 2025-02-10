@@ -82,6 +82,28 @@ const EstampasPublicadas = () => {
       console.error('Error eliminando la estampa:', error);
     }
   };
+
+  const restock = async (estampa) => {
+    try {
+      const response = await fetch(`${Apiurl}/estampas/modificarEstampa`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          codigoEstampa: estampa.id,
+          // stock: nuevoStock,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(`Error al modificar la estampa: ${data.error || response.statusText}`);
+      }
+  
+    } catch (error) {
+      console.error('Error al actualizar la estampa:', error);
+    }
+  };
   
 
   return (
@@ -96,9 +118,10 @@ const EstampasPublicadas = () => {
               <img src={estampa.imagen} alt={estampa.nombre} className="estampa-img" />
               <div className="estampa-info">
                 <h3>{estampa.nombre}</h3>
-                <button className="borrar-btn" onClick={() => borrarEstampa(estampa.id)}>
-                  Borrar
-                </button>
+                <div className="botones-container">
+                  <button className="borrar-btn" onClick={() => borrarEstampa(estampa.id)}>Borrar</button>
+                  <button className="restock-btn" onClick={() => restock(estampa)}>ReStock</button>
+                </div>  
               </div>
             </div>
           ))

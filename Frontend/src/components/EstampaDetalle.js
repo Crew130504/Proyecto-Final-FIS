@@ -5,16 +5,14 @@ import { Apiurl } from '../services/apirest';
 import { useAuth } from './Autenticacion';
 
 //Este componente permite personalizar las estampas luego de seleccionarlas.
-//
 
-// Imágenes de camisetas en diferentes colores
 import camisetaBlanca from '../Imagenes/camiseta_blanca.png';
 import camisetaNegra from '../Imagenes/camiseta_negra.png';
 import camisetaAzul from '../Imagenes/camiseta_azul.png';
 import camisetaRoja from '../Imagenes/camiseta_roja.png';
 
 const EstampaDetalle = ({ estampa, onClose }) => {
-  const [color, setColor] = useState('blanco'); // Color inicial: blanco
+  const [color, setColor] = useState('blanco'); 
   const [talla, setTalla] = useState('M');
   const [material, setMaterial] = useState('algodon');
   const [ubicacion, setUbicacion] = useState('central');
@@ -22,11 +20,10 @@ const EstampaDetalle = ({ estampa, onClose }) => {
   const [cantidad, setCantidad] = useState(1);
   const [diseño, setDiseño] = useState('predeterminado');
   const [descripcionPersonalizada, setDescripcionPersonalizada] = useState('');
-  const [mensajeError, setMensajeError] = useState(''); // Estado para el mensaje de error
-  const [precioTotal, setPrecioTotal] = useState(estampa.precio); // Estado para el precio total
+  const [mensajeError, setMensajeError] = useState(''); 
+  const [precioTotal, setPrecioTotal] = useState(estampa.precio); 
   const { isAuthenticated, userRole, oficialNickname } = useAuth();
 
-  // Actualiza el precio total cada vez que cambia la cantidad
   useEffect(() => {
     const cantidadValida = isNaN(cantidad) || cantidad === "" ? 0 : cantidad;
     setPrecioTotal(estampa.precio * cantidadValida);
@@ -35,11 +32,10 @@ const EstampaDetalle = ({ estampa, onClose }) => {
 
   const handleCantidadChange = (e) => {
     const value = e.target.value;
-  
-    // Permitir cualquier valor intermedio, incluida una cadena vacía
+
     if (value === "" || /^[0-9]*$/.test(value)) {
-      setCantidad(value); // Actualiza el estado con el valor sin validarlo
-      setMensajeError(""); // Limpia los mensajes de error
+      setCantidad(value); 
+      setMensajeError("");
     }
   };
   
@@ -50,23 +46,23 @@ const EstampaDetalle = ({ estampa, onClose }) => {
       const numericValue = parseInt(prevCantidad, 10);
   
       if (isNaN(numericValue) || numericValue < 1) {
-        setMensajeError("La cantidad mínima es 1."); // Mensaje de error si es menor que 1
+        setMensajeError("La cantidad mínima es 1."); 
         return 1;
       }
       if (numericValue > estampa.stock) {
-        setMensajeError(`Solo hay ${estampa.stock} unidades disponibles.`); // Mensaje si supera el máximo
+        setMensajeError(`Solo hay ${estampa.stock} unidades disponibles.`); 
         return estampa.stock;
       }
   
-      setMensajeError(""); // Limpia los mensajes si todo está bien
-      return numericValue; // Devuelve el valor válido
+      setMensajeError(""); 
+      return numericValue; 
     });
   };
   
   
 
 
-  // Seleccionar la imagen de la camiseta según el color
+  
   const obtenerCamiseta = () => {
     switch (color) {
       case 'negro':
@@ -76,24 +72,24 @@ const EstampaDetalle = ({ estampa, onClose }) => {
       case 'rojo':
         return camisetaRoja;
       default:
-        return camisetaBlanca; // Predeterminado a camiseta blanca
+        return camisetaBlanca; 
     }
   };
 
-  // Establecer la posición de la estampa
+
   const obtenerEstampaEstilo = () => {
     switch (ubicacion) {
       case 'superior':
-        return { left: '50%', top: '10%' }; // Estampa a nivel superior
+        return { left: '50%', top: '10%' }; 
       case 'inferior':
-        return { left: '50%', top: '70%' }; // Estampa a nivel inferior
+        return { left: '50%', top: '70%' }; 
       case 'izquierda':
-        return { left: '30%', top: '50%' }; // Estampa a la izquierda
+        return { left: '30%', top: '50%' }; 
       case 'derecha':
-        return { left: '70%', top: '50%' }; // Estampa a la derecha
+        return { left: '70%', top: '50%' }; 
       case 'central':
       default:
-        return { left: '50%', top: '50%' }; // Estampa centrada
+        return { left: '50%', top: '50%' };
     }
   };
 
@@ -104,7 +100,6 @@ const EstampaDetalle = ({ estampa, onClose }) => {
     }
 
     try {
-        // Paso 1: Obtener la cédula del cliente basado en su nickname
         const urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
         const responseCedula = await fetch(urlCedula);
 
@@ -117,11 +112,8 @@ const EstampaDetalle = ({ estampa, onClose }) => {
 
         if (!cedula) {
             throw new Error('No se pudo encontrar la cédula del usuario.');
-        }
+        }        
 
-        console.log('Cédula del cliente:', cedula);
-
-        // Paso 2: Preparar la data de la venta
         const ventaData = {
             cedula: cedula,
             totalCompra: precioTotal,
@@ -141,7 +133,6 @@ const EstampaDetalle = ({ estampa, onClose }) => {
             ]
         };
 
-        // Paso 3: Enviar la venta al backend
         const responseVenta = await fetch(`${Apiurl}/ventas`, {
             method: 'POST',
             headers: {
@@ -153,9 +144,8 @@ const EstampaDetalle = ({ estampa, onClose }) => {
         const result = await responseVenta.json();
 
         if (responseVenta.ok) {
-            // Paso 4: Actualizar el stock de la estampa
             const nuevoStock = estampa.stock - cantidad;
-            await actualizarEstampaEnBD(estampa, nuevoStock);  // Usamos la función existente
+            await actualizarEstampaEnBD(estampa, nuevoStock);
 
             alert('¡Compra realizada exitosamente y stock actualizado!');
             window.location.reload();
@@ -168,8 +158,6 @@ const EstampaDetalle = ({ estampa, onClose }) => {
     }
 };
 
-
-  // Función para agregar al carrito y actualizar el stock
 const handleAñadirAlCarrito = () => {
   if (cantidad > estampa.stock) {
     setMensajeError(`Solo hay ${estampa.stock} unidades disponibles.`);
@@ -211,16 +199,9 @@ const handleAñadirAlCarrito = () => {
 
   localStorage.setItem('carrito', JSON.stringify(carrito));
 
-  const nuevoStock = estampa.stock - cantidad;
-  actualizarEstampaEnBD(estampa, nuevoStock);
-
   alert(`Producto agregado al carrito`);
-  window.location.reload();
 };
 
-  
-
-// Función para actualizar la estampa en la base de datos
 const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
   try {
     const response = await fetch(`${Apiurl}/estampas/modificarEstampa`, {
@@ -233,13 +214,11 @@ const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
     });
 
     const data = await response.json();
-    console.log('Respuesta de la API:', data);
 
     if (!response.ok) {
       throw new Error(`Error al modificar la estampa: ${data.error || response.statusText}`);
     }
 
-    console.log('Stock actualizado correctamente.');
   } catch (error) {
     console.error('Error al actualizar la estampa:', error);
   }
@@ -276,7 +255,6 @@ const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
         <span className="detalle-precio">Precio: ${estampa.precio.toLocaleString()}</span>
         <span className="detalle-disponibilidad">Disponibilidad: {estampa.stock}</span>
 
-        {/* Opciones de personalización */}
         <label>
           Color:
           <select value={color} onChange={(e) => setColor(e.target.value)}>
@@ -334,12 +312,12 @@ const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
             type="number"
             min="1"
             max={estampa.stock}
-            value={cantidad === "" ? "" : cantidad} // Muestra el campo vacío si cantidad es ""
+            value={cantidad === "" ? "" : cantidad} 
             onChange={handleCantidadChange}
             onBlur={handleCantidadBlur}
             className="input-cantidad"
           />
-          {mensajeError && <p className="error-mensaje">{mensajeError}</p>} {/* Muestra el mensaje de error */}
+          {mensajeError && <p className="error-mensaje">{mensajeError}</p>}
         </label>
 
         <label>
@@ -350,7 +328,6 @@ const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
           </select>
         </label>
 
-        {/* Muestra el campo de descripción solo si elige "Otro diseño" */}
         {diseño === 'otro' && (
           <label>
             Descripción del diseño:
@@ -366,17 +343,14 @@ const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
           </label>
         )}
 
-
-        {/* Muestra el precio total con separadores de miles */}
+ 
         <p className="precio-total">Precio total: ${isNaN(precioTotal) || precioTotal == null ? 0 : precioTotal.toLocaleString()}</p>
 
-        {/* Botones */}
         <div className="detalle-botones">
           <button className="boton-comprar" onClick={handleCompra}>Comprar</button>
           <button className="boton-carrito" onClick={handleAñadirAlCarrito}>Agregar al carrito</button>
         </div>
 
-        {/* Descripción */}
         <div className="detalle-descripcion">
           <h4>Descripción</h4>
           <p>{estampa.descripcion}</p>

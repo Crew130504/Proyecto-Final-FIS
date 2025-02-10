@@ -27,8 +27,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedAuth = localStorage.getItem('isAuthenticated') === 'true'; // Asegura que sea un booleano
     const storedRole = localStorage.getItem('userRole');
-    const storedNickname = localStorage.getItem('oficialNickname');
-    console.log('Recuperando nickname:', storedNickname);
+    const storedNickname = localStorage.getItem('oficialNickname'); 
     
     if (storedAuth && storedRole && storedNickname) {
       setIsAuthenticated(true);
@@ -61,7 +60,6 @@ export const AuthProvider = ({ children }) => {
         console.error("Rol de usuario inválido");
         return;
       }
-      console.log(username)
       // Actualizar el estado y redirigir
       actualizarEstadoYRedirigir(miRol,username);
       }else{
@@ -82,7 +80,6 @@ export const AuthProvider = ({ children }) => {
     setOficialNickname(nickname);
     localStorage.setItem("isAuthenticated", "true");
     localStorage.setItem('userRole', role);
-    console.log('Guardando nickname:', nickname);
     localStorage.setItem('oficialNickname', nickname);
     navigateToRole(role);
   };

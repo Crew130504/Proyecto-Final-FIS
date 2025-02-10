@@ -25,14 +25,10 @@ const PerfilUsuarioCliente = () => {
               }
       
               const dataCedula = await responseCedula.json();
-              console.log(dataCedula)
               const cedula = dataCedula.body?.[0]?.cedula;
-              console.log(cedula)
               if (!cedula) {
                 throw new Error("No se encontró la cédula para el usuario.");
-              }
-      
-              console.log("Cédula obtenida:", cedula);
+              }             
               let urlUsuario = `${Apiurl}/usuarios/${cedula}`;
               // Llamada al segundo endpoint para obtener los datos del cliente
               const responseUsuario = await fetch(urlUsuario);
@@ -47,9 +43,7 @@ const PerfilUsuarioCliente = () => {
               if (!usuario) {
                 throw new Error("No se encontraron datos del usuario.");
               }
-      
-              console.log("Datos del usuario obtenidos:", usuario);
-      
+              
               // Actualiza el estado del cliente con los datos obtenidos
               setCliente({
                 nombre: usuario.nombre,

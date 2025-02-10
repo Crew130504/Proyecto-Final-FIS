@@ -1,18 +1,42 @@
 // src/components/Carrito.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ProcesoCompra.css';  // Usamos el mismo CSS que ProcesoCompra
+import './Carrito.css';
 import { Apiurl } from '../services/apirest';
+import { useAuth } from './Autenticacion';
+
+
 
 const Carrito = () => {
   const [articulos, setArticulos] = useState([]);
-  const navigate = useNavigate();
+  const { oficialNickname } = useAuth();
 
-  // Cargar artículos desde localStorage al iniciar el componente
   useEffect(() => {
     const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
     setArticulos(carritoGuardado);
   }, []);
+
+  const actualizarEstampaEnBD = async (estampa, nuevoStock) => {
+    try {
+      const response = await fetch(`${Apiurl}/estampas/modificarEstampa`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          codigoEstampa: estampa.id,
+          stock: nuevoStock,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(`Error al modificar la estampa: ${data.error || response.statusText}`);
+      }
+  
+    } catch (error) {
+      console.error('Error al actualizar la estampa:', error);
+    }
+  };
 
   const obtenerStockActual = async (codigoEstampa) => {
     try {
@@ -21,36 +45,15 @@ const Carrito = () => {
         throw new Error(`Error al obtener el stock actual: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.body[0]?.stock;  // Asegúrate de que la API devuelve el stock en esta estructura
+      return data.body[0]?.stock;
     } catch (error) {
       console.error('Error al obtener el stock actual:', error);
-      return null;  // Devuelve null si hay un error
+      return null;  
     }
   };
 
   const eliminarArticulo = async (index) => {
-    const articuloAEliminar = articulos[index];
-
     try {
-      // Obtiene el stock actual de la base de datos antes de actualizar
-      const stockActual = await obtenerStockActual(articuloAEliminar.id);
-
-      if (stockActual === null) {
-        console.error('No se pudo obtener el stock actual.');
-        return;
-      }
-
-      // Actualiza el stock sumando la cantidad eliminada al stock actual de la base de datos
-      await fetch(`${Apiurl}/estampas/modificarEstampa`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          codigoEstampa: articuloAEliminar.id,
-          stock: stockActual + articuloAEliminar.cantidad,
-        }),
-      });
-
-      // Elimina el artículo del carrito
       const nuevosArticulos = articulos.filter((_, i) => i !== index);
       setArticulos(nuevosArticulos);
       localStorage.setItem('carrito', JSON.stringify(nuevosArticulos));
@@ -59,32 +62,8 @@ const Carrito = () => {
     }
   };
 
-
-
-  // Función para eliminar solo una unidad del artículo
   const eliminarUnaUnidad = async (index) => {
-    const articuloAEliminar = articulos[index];
-
     try {
-      // Obtiene el stock actual de la base de datos
-      const stockActual = await obtenerStockActual(articuloAEliminar.id);
-
-      if (stockActual === null) {
-        console.error('No se pudo obtener el stock actual.');
-        return;
-      }
-
-      // Devuelve solo una unidad al stock
-      await fetch(`${Apiurl}/estampas/modificarEstampa`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          codigoEstampa: articuloAEliminar.id,
-          stock: stockActual + 1,
-        }),
-      });
-
-      // Actualiza el carrito local
       const nuevosArticulos = articulos.map((articulo, i) => {
         if (i === index) {
           return { ...articulo, cantidad: articulo.cantidad - 1 };
@@ -99,26 +78,8 @@ const Carrito = () => {
     }
   };
 
-
-
-  // Función para vaciar el carrito y devolver el stock de todos los artículos
   const vaciarCarrito = async () => {
     try {
-      await Promise.all(articulos.map(async (articulo) => {
-        const stockActual = await obtenerStockActual(articulo.id);
-  
-        if (stockActual !== null) {
-          await fetch(`${Apiurl}/estampas/modificarEstampa`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              codigoEstampa: articulo.id,
-              stock: stockActual + articulo.cantidad,
-            }),
-          });
-        }
-      }));
-  
       setArticulos([]);
       localStorage.removeItem('carrito');
     } catch (error) {
@@ -126,17 +87,93 @@ const Carrito = () => {
     }
   };
   
-
-
-  // Calcular el precio total
   const calcularTotal = () => {
     return articulos.reduce((total, articulo) => total + (articulo.precio * articulo.cantidad), 0).toFixed(2);
   };
 
-  // Función para redirigir al proceso de compra
-  const irAProcesoCompra = () => {
-    navigate('/ProcesoCompra');
-  };
+  const comprarTodo = async () => { 
+    if (articulos.length === 0) {
+        alert("No hay artículos en el carrito para comprar.");
+        return;
+    }
+    try {
+        const urlCedula = `${Apiurl}/usuarios/username/${oficialNickname}`;
+        const responseCedula = await fetch(urlCedula);
+
+        if (!responseCedula.ok) {
+            throw new Error(`Error al obtener la cédula: ${responseCedula.status}`);
+        }
+
+        const dataCedula = await responseCedula.json();
+        const cedula = dataCedula.body?.[0]?.cedula;
+
+        if (!cedula) {
+            throw new Error('No se pudo encontrar la cédula del usuario.');
+        }
+
+        const detallesVenta = [];
+
+        for (const articulo of articulos) {
+            const stockActual = await obtenerStockActual(articulo.id);
+
+            if (stockActual === null) {
+                throw new Error(`No se pudo obtener el stock de ${articulo.nombreEstampa}.`);
+            }
+
+            if (stockActual < articulo.cantidad) {
+                throw new Error(`Stock insuficiente para ${articulo.nombreEstampa}.`);
+            }
+
+            const nuevoStock = stockActual - articulo.cantidad;
+            await actualizarEstampaEnBD(articulo, nuevoStock);
+
+            detallesVenta.push({
+                codigoEstampa: articulo.id,
+                cantidad: articulo.cantidad,
+                precioUnitario: articulo.precio,
+                color: articulo.color,
+                talla: articulo.talla,
+                material: articulo.material,
+                ubicacion: articulo.ubicacion,
+                tamañoEstampa: articulo.tamañoEstampa,
+                diseño: articulo.diseño,
+                descripcionPersonalizada: articulo.diseño === 'otro' ? articulo.descripcionPersonalizada : null,
+            });
+
+        }
+
+        const totalCompra = calcularTotal();
+
+        const ventaData = {
+            cedula: cedula,
+            totalCompra: totalCompra,
+            detalles: detallesVenta,
+        };
+ 
+        const responseVenta = await fetch(`${Apiurl}/ventas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ventaData)
+        });
+
+        if (!responseVenta.ok) {
+            throw new Error('Error al registrar la compra.');
+        }
+              
+        setArticulos([]);
+        localStorage.removeItem("carrito");
+
+        alert('¡Compra realizada exitosamente y stock actualizado!');
+
+    } catch (error) {
+        console.error('Error al realizar la compra:', error);
+        alert(`Error en la compra: ${error.message}`);
+    }
+};
+
+
 
   return (
     <div className="proceso-compra-container">
@@ -172,7 +209,7 @@ const Carrito = () => {
         <div className="proceso-compra-total">
           <h3>Total: ${calcularTotal()}</h3>
           <div className="botones-container">
-            <button onClick={irAProcesoCompra} className="proceso-compra-btn comprar">Comprar Todo</button>
+            <button onClick={comprarTodo} className="proceso-compra-btn comprar">Comprar Todo</button>
             <button onClick={vaciarCarrito} className="proceso-compra-btn eliminar">Vaciar Carrito</button>
           </div>
         </div>

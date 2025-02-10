@@ -36,6 +36,13 @@
     font-size: 18px;
     color: #333;
   }
+  .botones-container {
+    display: flex;
+    justify-content: center;   
+    gap: 10px;                 
+    margin-top: 10px;
+    width: 100%;
+  }
   
   .borrar-btn {
     background-color: #e74c3c;
@@ -49,6 +56,19 @@
   
   .borrar-btn:hover {
     background-color: #c0392b;
+  }
+  .restock-btn {
+    background-color: #3ce73c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .restock-btn:hover {
+    background-color: #3ce73c;
   }
   
   p {

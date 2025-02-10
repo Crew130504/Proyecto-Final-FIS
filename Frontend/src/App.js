@@ -6,7 +6,6 @@ import Carrito from './components/Carrito';
 import CatalogoEstampas from './components/CatalogoEstampas';
 import Contacto from './components/Contacto';
 import IniciarSesion from './components/IniciarSesion';
-import Registrarse from './components/Registrarse';
 import Footer from './components/Footer';
 import Inicio from './components/Inicio';
 import ProtectedRoute from './components/Proteccion_rutas'; // Importa ProtectedRoute
@@ -16,7 +15,6 @@ import SubirEstampa from './components/SubirEstampa';
 import EstampasPublicadas from './components/EstampasPublicadas';
 import Estadisticas from './components/Estadisticas';
 import Compras from './components/Compras';
-import ProcesoCompra from './components/ProcesoCompra';
 import PerfilUsuarioCliente from './components/PerfilUsuarioCliente'; // Componente Cliente
 import PerfilUsuarioArtista from './components/PerfilUsuarioArtista'; // Componente Artista
 //Importaciones para el footer
@@ -49,20 +47,9 @@ function App() {
             <Route path="/" element={<Inicio />} />
             <Route path="/CatalogoEstampas" element={<CatalogoEstampas />} />
             <Route path="/Iniciar-sesion" element={<IniciarSesion />} />
-            <Route path="/Registrarse" element={<Registrarse />} />
             <Route path="/Contacto" element={<Contacto />} />    
             <Route path="/SoporteTecnico" element={<SoporteTecnico />} />
             
-
-            {/*La ruta del proceso de compras esta protegida ya que solo la debe usar un cliente autenticado */}
-            <Route
-              path="/ProcesoCompra"
-              element={
-                <ProtectedRoute allowedRole="cliente">
-                  <ProcesoCompra />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/Carrito"
               element={
