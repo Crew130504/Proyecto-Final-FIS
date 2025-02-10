@@ -10,7 +10,7 @@ El objetivo de este proyecto es crear una experiencia interactiva donde los clie
 
 ---
 
-## Estructura del Proyecto
+## Estructura del Proyecto 
 
 La estructura principal del proyecto está organizada en las siguientes carpetas:
 
